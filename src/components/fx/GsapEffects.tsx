@@ -116,6 +116,35 @@ export default function GsapEffects() {
         });
       });
 
+      // Featured Artist - portrait slides in from the left, copy from the right
+      document.querySelectorAll<HTMLElement>(".artist-feature-media").forEach((media) => {
+        gsap.from(media, {
+          x: -70,
+          opacity: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: media,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+
+      document.querySelectorAll<HTMLElement>(".artist-feature-body").forEach((body) => {
+        gsap.from(body, {
+          x: 70,
+          opacity: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: body,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+
       // Portfolio Items Stagger
       document
         .querySelectorAll<HTMLElement>(".portfolio-item, .portfolio-page-item")
@@ -321,6 +350,37 @@ export default function GsapEffects() {
         });
       });
 
+      // Piercing Catalogue Cards — stagger repeats per row via modulo
+      document.querySelectorAll<HTMLElement>(".piercing-card").forEach((card, i) => {
+        gsap.from(card, {
+          y: 60,
+          opacity: 0,
+          duration: 0.7,
+          delay: (i % 3) * 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 88%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+
+      // Piercing Detail Rows — alternate slide-in
+      document.querySelectorAll<HTMLElement>(".piercing-detail").forEach((row, i) => {
+        gsap.from(row, {
+          x: i % 2 === 0 ? -50 : 50,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: row,
+            start: "top 88%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+
       // CTA Section Parallax
       const ctaBg = document.querySelector<HTMLElement>(".cta-bg");
       if (ctaBg) {
@@ -341,6 +401,22 @@ export default function GsapEffects() {
     // App Router never fires a full `load` on client navigation, so positions
     // have to be recomputed whenever the route swaps.
     ScrollTrigger.refresh();
+
+    // Gallery rows carry no intrinsic height until their hot-linked images land,
+    // so every pin and scrub above measures stale positions once they resize the
+    // document. Recompute once the last one settles.
+    const pendingImages = Array.from(document.images).filter((img) => !img.complete);
+    if (pendingImages.length > 0) {
+      let remaining = pendingImages.length;
+      const onImageSettled = () => {
+        remaining -= 1;
+        if (remaining === 0) ScrollTrigger.refresh();
+      };
+      pendingImages.forEach((img) => {
+        img.addEventListener("load", onImageSettled, { once: true });
+        img.addEventListener("error", onImageSettled, { once: true });
+      });
+    }
 
     return () => {
       ctx.revert();

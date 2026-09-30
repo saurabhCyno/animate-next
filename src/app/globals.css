@@ -117,6 +117,28 @@
 }
 
 /* ============================================================================
+   KEYFRAMES (added for the services catalogue — not in the original)
+   ========================================================================= */
+@keyframes rate-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  55%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes sheen-sweep {
+  from {
+    left: -120%;
+  }
+  to {
+    left: 140%;
+  }
+}
+
+/* ============================================================================
    BASE — element resets (original `css/style.css`)
    ========================================================================= */
 @layer base {
@@ -819,12 +841,41 @@
     margin-top: 60px;
   }
 
+  /* Two top-level services: pair them on desktop, stack on mobile. */
+  .services-grid--two {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+
+  /*
+   * Square premium cards. `aspect-ratio` gives the 1:1 box; because these are
+   * grid items the automatic minimum size still applies, so the card grows
+   * rather than clipping if copy is ever edited to overflow.
+   */
+  .services-grid--two .service-card {
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 1 / 1;
+    padding: 56px 44px;
+  }
+
+  .services-grid--two .service-card-title,
+  .services-grid--two .service-card-desc {
+    width: 100%;
+  }
+
+  .services-grid--two .service-card-link {
+    margin-top: auto;
+  }
+
   .service-card {
     position: relative;
-    background: var(--bg-surface);
+    background:
+      linear-gradient(155deg, rgba(212, 160, 23, 0.07), transparent 42%),
+      var(--bg-surface);
     border: 1px solid var(--border-color);
     border-radius: 4px;
-    padding: 48px 32px;
+    padding: 56px 44px;
     overflow: hidden;
     transition: var(--transition-medium);
     cursor: pointer;
@@ -871,21 +922,55 @@
   }
 
   .service-card:hover {
-    border-color: var(--accent-red);
+    border-color: var(--accent-gold);
     transform: translateY(-8px);
-    box-shadow: var(--shadow-glow-red);
+    box-shadow:
+      0 34px 70px -24px rgba(0, 0, 0, 0.75),
+      0 0 0 1px rgba(212, 160, 23, 0.22),
+      0 0 46px -14px rgba(212, 160, 23, 0.4);
+  }
+
+  /* Editorial index numeral - paired grid only, so single grids don't renumber. */
+  .service-card-index {
+    position: absolute;
+    top: 36px;
+    right: 44px;
+    z-index: 2;
+    font-family: var(--font-heading);
+    font-size: 3.4rem;
+    font-weight: 700;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(212, 160, 23, 0.28);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.5s, transform 0.5s;
+    pointer-events: none;
+  }
+
+  .services-grid--two .service-card-index {
+    opacity: 1;
+    transform: none;
+  }
+
+  .service-card:hover .service-card-index {
+    opacity: 1;
+    color: rgba(212, 160, 23, 0.16);
+    -webkit-text-stroke-color: var(--accent-gold);
   }
 
   .service-card-icon {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 24px;
+    width: 68px;
+    height: 68px;
+    margin-bottom: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
-    border: 1px solid var(--border-color);
+    font-size: 1.7rem;
+    color: var(--accent-gold);
+    border: 1px solid rgba(212, 160, 23, 0.32);
     border-radius: 50%;
+    background: radial-gradient(circle at 32% 26%, rgba(212, 160, 23, 0.18), transparent 70%);
     transition: var(--transition-fast);
     position: relative;
     z-index: 2;
@@ -894,22 +979,41 @@
   .service-card:hover .service-card-icon {
     border-color: var(--accent-gold);
     color: var(--accent-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 6px rgba(212, 160, 23, 0.07);
   }
 
   .service-card-title {
     font-family: var(--font-heading);
-    font-size: 1.5rem;
-    margin-bottom: 16px;
-    letter-spacing: 2px;
+    font-size: 1.85rem;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
     position: relative;
     z-index: 2;
   }
 
+  /* Gold rule that extends under the heading on hover. */
+  .service-card-title::after {
+    content: "";
+    display: block;
+    width: 44px;
+    height: 2px;
+    margin-top: 18px;
+    background: linear-gradient(90deg, var(--accent-gold), rgba(212, 160, 23, 0));
+    transition: width 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .service-card:hover .service-card-title::after {
+    width: 96px;
+  }
+
   .service-card-desc {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--text-secondary);
-    line-height: 1.7;
-    margin-bottom: 24px;
+    line-height: 1.8;
+    margin-bottom: 28px;
     position: relative;
     z-index: 2;
   }
@@ -918,17 +1022,79 @@
     color: rgba(255, 255, 255, 0.85);
   }
 
-  .service-card-link {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+  .service-card-price {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
     color: var(--accent-gold);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    margin-bottom: 14px;
     position: relative;
     z-index: 2;
+  }
+
+  .service-card-benefits {
+    list-style: none;
+    margin: 0 0 24px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .service-card-benefits li {
+    position: relative;
+    padding: 7px 0 7px 22px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .service-card-benefits li:last-child {
+    border-bottom: none;
+  }
+
+  .service-card-benefits li::before {
+    content: "\2713";
+    position: absolute;
+    left: 0;
+    top: 7px;
+    color: var(--accent-gold);
+    font-weight: 700;
+  }
+
+  .service-card:hover .service-card-benefits li {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  /* Learn More - outlined gold pill that fills on hover. */
+  .service-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    align-self: flex-start;
+    padding: 16px 32px;
+    border: 1px solid rgba(212, 160, 23, 0.42);
+    border-radius: 999px;
+    background: rgba(212, 160, 23, 0.05);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    transition:
+      color 0.35s,
+      background 0.35s,
+      border-color 0.35s,
+      box-shadow 0.35s;
+  }
+
+  .service-card:hover .service-card-link {
+    color: #0a0a0a;
+    background: var(--accent-gold);
+    border-color: var(--accent-gold);
+    box-shadow: 0 12px 30px -12px rgba(212, 160, 23, 0.6);
   }
 
   .service-card-link .arrow {
@@ -1112,6 +1278,180 @@
     color: var(--accent-gold);
   }
 
+  /* ---------- Featured artist (home) ---------- */
+  .artist-feature {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 64px;
+    margin-top: 60px;
+  }
+
+  .artist-feature-media {
+    position: relative;
+  }
+
+  .artist-feature-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    aspect-ratio: 4 / 5;
+  }
+
+  .artist-feature-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  .artist-feature-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1s;
+  }
+
+  .artist-feature:hover .artist-feature-frame img {
+    transform: scale(1.05);
+  }
+
+  .artist-feature-badge {
+    position: absolute;
+    left: 24px;
+    bottom: 24px;
+    z-index: 1;
+    padding: 10px 20px;
+    border: 1px solid var(--accent-gold);
+    border-radius: 999px;
+    background: rgba(10, 10, 10, 0.72);
+    backdrop-filter: blur(6px);
+    font-size: 0.68rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+  }
+
+  .artist-feature-name {
+    font-family: var(--font-heading);
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    line-height: 1.05;
+    letter-spacing: 2px;
+    margin: 12px 0 8px;
+  }
+
+  .artist-feature-specialty {
+    font-size: 0.8rem;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 24px;
+  }
+
+  .artist-feature-bio {
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.85;
+    margin-bottom: 16px;
+  }
+
+  .artist-feature-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 32px 0;
+    padding: 24px 0;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .artist-feature-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .artist-feature-stat-value {
+    font-family: var(--font-heading);
+    font-size: 1.9rem;
+    line-height: 1;
+    color: var(--accent-gold);
+  }
+
+  .artist-feature-stat-label {
+    font-size: 0.66rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .artist-feature-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Social row is always visible here - there is no card hover to reveal it. */
+  .artist-social--static {
+    opacity: 1;
+    margin-top: 0;
+    gap: 18px;
+  }
+
+  .artist-social--static a {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    color: var(--text-muted);
+    font-size: 1rem;
+    transition: border-color 0.3s, color 0.3s, transform 0.3s;
+  }
+
+  .artist-social--static a:hover {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+    transform: translateY(-3px);
+  }
+
+  /* Stacked roster (/about): alternate sides, squarer portraits, ruled apart. */
+  .artist-roster {
+    margin-top: 60px;
+  }
+
+  .artist-feature--reverse {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+  }
+
+  .artist-feature--reverse .artist-feature-media {
+    order: 2;
+  }
+
+  .artist-feature--reverse .artist-feature-body {
+    order: 1;
+  }
+
+  .artist-feature--compact {
+    margin-top: 0;
+  }
+
+  .artist-feature--compact + .artist-feature--compact {
+    margin-top: 72px;
+    padding-top: 72px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .artist-feature--compact .artist-feature-frame {
+    aspect-ratio: 1 / 1;
+  }
+
+  .artist-feature--compact .artist-feature-name {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+  }
+
   /* ---------- Testimonials ---------- */
   .testimonials {
     background: var(--bg-secondary);
@@ -1132,26 +1472,7 @@
   }
 
   .testimonials-swiper {
-    padding-bottom: 50px;
-  }
-
-  .testimonials-swiper .swiper-button-next,
-  .testimonials-swiper .swiper-button-prev {
-    top: auto;
-    bottom: 0;
-    margin-top: 0;
-    width: 44px;
-    height: 44px;
-  }
-
-  .testimonials-swiper .swiper-button-prev {
-    left: 50%;
-    transform: translateX(calc(-100% - 8px));
-  }
-
-  .testimonials-swiper .swiper-button-next {
-    left: 50%;
-    transform: translateX(8px);
+    padding-bottom: 0;
   }
 
   .testimonial-stars {
@@ -1649,6 +1970,19 @@
     overflow: hidden;
   }
 
+  .pricing-grid--four {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .pricing-size {
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: -4px;
+  }
+
   .pricing-card.featured {
     border-color: var(--accent-gold);
     transform: scale(1.05);
@@ -1713,6 +2047,407 @@
 
   .pricing-features li:last-child {
     border-bottom: none;
+  }
+
+  /* ---------- Per-inch rate ---------- */
+  .rate-card {
+    position: relative;
+    border: 1px solid var(--accent-gold);
+    border-radius: 4px;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(212, 160, 23, 0.12), transparent 65%),
+      var(--bg-surface);
+    padding: 56px 32px;
+    text-align: center;
+    overflow: hidden;
+    margin-top: 60px;
+  }
+
+  .rate-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(212, 160, 23, 0.09),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: rate-sweep 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .rate-card-label {
+    position: relative;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .rate-card-amount {
+    position: relative;
+    font-family: var(--font-heading);
+    font-size: clamp(3.5rem, 9vw, 6rem);
+    font-weight: 700;
+    line-height: 1;
+    margin: 16px 0 6px;
+    background: linear-gradient(135deg, var(--accent-gold), #fff3cf 50%, var(--accent-gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .rate-card-unit {
+    position: relative;
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+  }
+
+  .rate-card-note {
+    position: relative;
+    max-width: 640px;
+    margin: 24px auto 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+
+  /* ---------- Piercing catalogue ---------- */
+  .piercing-groups {
+    margin-top: 60px;
+  }
+
+  .piercing-group + .piercing-group {
+    margin-top: 80px;
+  }
+
+  .piercing-group-head {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 40px;
+  }
+
+  .piercing-group-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    letter-spacing: 2px;
+    margin: 8px 0 12px;
+  }
+
+  .piercing-group-blurb {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .piercing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .piercing-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: var(--transition-medium);
+  }
+
+  .piercing-card:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-glow-gold);
+  }
+
+  .piercing-card.featured {
+    border-color: var(--accent-gold);
+  }
+
+  .piercing-card-media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--bg-card);
+  }
+
+  .piercing-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(0.4) contrast(1.05);
+    transition:
+      transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      filter 0.6s;
+  }
+
+  .piercing-card:hover .piercing-card-media img {
+    transform: scale(1.08);
+    filter: grayscale(0) contrast(1);
+  }
+
+  .piercing-card-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(11, 11, 11, 0.25) 0%,
+      rgba(11, 11, 11, 0) 40%,
+      rgba(11, 11, 11, 0.8) 100%
+    );
+    pointer-events: none;
+  }
+
+  .piercing-card-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(11, 11, 11, 0.78);
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+    font-size: 1.05rem;
+    backdrop-filter: blur(6px);
+    transition:
+      background 0.4s,
+      color 0.4s,
+      transform 0.6s;
+  }
+
+  .piercing-card:hover .piercing-card-badge {
+    background: var(--accent-gold);
+    color: var(--bg-primary);
+    transform: rotate(360deg);
+  }
+
+  .piercing-card-body {
+    flex: 1;
+    padding: 28px 24px 20px;
+  }
+
+  .piercing-card-name {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+  }
+
+  .piercing-card-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .piercing-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 18px;
+    font-size: 0.68rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .piercing-card-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .piercing-card-meta i {
+    color: var(--accent-gold);
+  }
+
+  .piercing-card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 24px;
+    border-top: 1px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  .piercing-card-price {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    line-height: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .piercing-card-price small {
+    font-family: var(--font-body);
+    font-size: 0.58rem;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .piercing-card-cta {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+
+  .piercing-card:hover .piercing-card-cta {
+    color: var(--accent-gold);
+  }
+
+  .piercing-card-cta .arrow {
+    transition: transform 0.3s;
+  }
+
+  .piercing-card:hover .piercing-card-cta .arrow {
+    transform: translateX(4px);
+  }
+
+  .piercing-card-sheen {
+    position: absolute;
+    top: 0;
+    left: -120%;
+    z-index: 3;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      rgba(212, 160, 23, 0.18),
+      transparent
+    );
+    transform: skewX(-18deg);
+    pointer-events: none;
+  }
+
+  .piercing-card:hover .piercing-card-sheen {
+    animation: sheen-sweep 1s ease forwards;
+  }
+
+  /* ---------- Piercing detail rows ---------- */
+  .piercing-details {
+    margin-top: 60px;
+  }
+
+  .piercing-detail {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 40px;
+    align-items: start;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--border-color);
+    scroll-margin-top: calc(var(--nav-height) + 30px);
+  }
+
+  .piercing-detail:first-child {
+    border-top: 1px solid var(--border-color);
+  }
+
+  .piercing-detail-media {
+    aspect-ratio: 1 / 1;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+  }
+
+  .piercing-detail-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .piercing-detail:hover .piercing-detail-media img {
+    transform: scale(1.07);
+  }
+
+  .piercing-detail-name {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+
+  .piercing-detail-price {
+    font-family: var(--font-heading);
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    margin-bottom: 18px;
+  }
+
+  .piercing-detail-price small {
+    display: block;
+    margin-top: 5px;
+    font-family: var(--font-body);
+    font-size: 0.62rem;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .piercing-detail-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 22px;
+  }
+
+  .piercing-detail-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .piercing-detail-spec {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
+    padding: 8px 14px;
+    font-size: 0.68rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
+  .piercing-detail-spec i {
+    color: var(--accent-gold);
   }
 
   /* ---------- FAQ ---------- */
@@ -2573,8 +3308,34 @@
       grid-template-columns: repeat(2, 1fr);
     }
 
+    .piercing-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .piercing-detail {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .piercing-detail-media {
+      max-width: 320px;
+    }
+
+    .rate-card {
+      padding: 44px 24px;
+    }
+
+    .pricing-grid--four {
+      grid-template-columns: 1fr;
+    }
+
+
     .artists-grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+
+    .artist-feature {
+      gap: 40px;
     }
 
     .footer-grid {
@@ -2584,6 +3345,19 @@
 
     .pricing-grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+
+    .piercing-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pricing-grid--four {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .piercing-detail {
+      grid-template-columns: 200px 1fr;
+      gap: 32px;
     }
 
     .service-block {
@@ -2651,6 +3425,20 @@
       grid-template-columns: 1fr;
     }
 
+    .services-grid--two {
+      grid-template-columns: 1fr;
+    }
+
+    .services-grid--two .service-card {
+      padding: 40px 32px;
+    }
+
+    .services-grid--two .service-card-index {
+      top: 28px;
+      right: 32px;
+      font-size: 2.8rem;
+    }
+
     .portfolio-header {
       flex-direction: column;
       align-items: flex-start;
@@ -2666,6 +3454,40 @@
 
     .artists-grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+
+    .artist-feature {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    /* Stacked on mobile, so the portrait always leads regardless of `reverse`. */
+    .artist-feature--reverse {
+      grid-template-columns: 1fr;
+    }
+
+    .artist-feature--reverse .artist-feature-media,
+    .artist-feature--reverse .artist-feature-body {
+      order: 0;
+    }
+
+    .artist-feature--compact + .artist-feature--compact {
+      margin-top: 48px;
+      padding-top: 48px;
+    }
+
+    .artist-roster {
+      margin-top: 40px;
+    }
+
+    .artist-feature-frame {
+      aspect-ratio: 3 / 2;
+    }
+
+    .artist-feature-stats {
+      margin: 24px 0;
+      padding: 20px 0;
     }
 
     .artist-card img {
@@ -2786,6 +3608,36 @@
       grid-template-columns: 1fr;
     }
 
+    .services-grid--two .service-card {
+      padding: 32px 24px;
+    }
+
+    .services-grid--two .service-card-index {
+      top: 22px;
+      right: 24px;
+      font-size: 2.4rem;
+    }
+
+    .services-grid--two .service-card-icon {
+      width: 58px;
+      height: 58px;
+      font-size: 1.5rem;
+      margin-bottom: 24px;
+    }
+
+    .services-grid--two .service-card-title {
+      font-size: 1.5rem;
+    }
+
+    .services-grid--two .service-card-desc {
+      font-size: 0.9rem;
+    }
+
+    .services-grid--two .service-card-link {
+      padding: 14px 26px;
+      letter-spacing: 2px;
+    }
+
     .portfolio-grid {
       grid-template-columns: 1fr;
     }
@@ -2797,6 +3649,11 @@
 
     .artists-grid {
       grid-template-columns: 1fr;
+    }
+
+    .artist-feature-stats {
+      grid-template-columns: 1fr;
+      gap: 20px;
     }
 
     .artist-card img {
@@ -2836,6 +3693,30 @@
       font-size: 1.8rem;
     }
 
+    .piercing-card-body {
+      padding: 22px 18px 16px;
+    }
+
+    .piercing-card-foot {
+      padding: 16px 18px;
+    }
+
+    .piercing-card-price {
+      font-size: 1.5rem;
+    }
+
+    .piercing-card-name {
+      font-size: 1.15rem;
+    }
+
+    .piercing-detail-name {
+      font-size: 1.35rem;
+    }
+
+    .piercing-detail-price {
+      font-size: 1.85rem;
+    }
+
     .portfolio-page-grid {
       grid-template-columns: 1fr;
     }
@@ -2844,9 +3725,10 @@
       grid-column: span 1;
     }
 
-    .testimonials-swiper {
-      padding-bottom: 50px;
-    }
+      .testimonials-swiper {
+        padding-bottom: 0;
+      }
+
 
     .horizontal-scroll-item .content h2 {
       font-size: 2rem;

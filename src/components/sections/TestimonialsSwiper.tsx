@@ -1,9 +1,8 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/navigation";
 
 export type TestimonialData = {
   stars: string;
@@ -27,7 +26,7 @@ export default function TestimonialsSwiper({ items }: { items: TestimonialData[]
         <div className="testimonials-wrapper">
           <Swiper
             className="testimonials-swiper"
-            modules={[Autoplay, Navigation]}
+            modules={[Autoplay]}
             slidesPerView={1}
             spaceBetween={0}
             loop
@@ -35,7 +34,6 @@ export default function TestimonialsSwiper({ items }: { items: TestimonialData[]
             grabCursor
             data-lenis-prevent
             autoplay={{ delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-            navigation={{ nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }}
           >
             {items.map((item) => (
               <SwiperSlide className="testimonial-slide" key={item.name}>
@@ -51,8 +49,6 @@ export default function TestimonialsSwiper({ items }: { items: TestimonialData[]
                 </div>
               </SwiperSlide>
             ))}
-            <div className="swiper-button-next" aria-label="Next testimonial" />
-            <div className="swiper-button-prev" aria-label="Previous testimonial" />
           </Swiper>
         </div>
       </div>

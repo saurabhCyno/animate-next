@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/sections/PageHero";
 import MissionGrid, { type MissionItem } from "@/components/sections/MissionGrid";
-import ArtistsGrid, { type ArtistData } from "@/components/sections/ArtistsGrid";
+import FeaturedArtist, {
+  type FeaturedArtistData,
+} from "@/components/sections/FeaturedArtist";
 import StudioGallery from "@/components/sections/StudioGallery";
 import CertificationsGrid, { type CertItem } from "@/components/sections/CertificationsGrid";
 import StatsGrid from "@/components/sections/StatsGrid";
 import CTASection from "@/components/sections/CTASection";
+import { pexels } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About Us | Inkspiration",
@@ -39,11 +42,89 @@ const MISSIONS: MissionItem[] = [
   },
 ];
 
-const ARTISTS: ArtistData[] = [
-  { name: "Marcus Chen", specialty: "Founder & Lead Artist — 12 yrs", image: "https://images.pexels.com/photos/20519299/pexels-photo-20519299.jpeg?auto=compress&cs=tinysrgb&w=600", socials: [["fa-instagram", "Instagram"], ["fa-twitter", "Twitter"]] },
-  { name: "Sofia Reyes", specialty: "Senior Artist — 9 yrs", image: "https://images.pexels.com/photos/37023014/pexels-photo-37023014.jpeg?auto=compress&cs=tinysrgb&w=600", socials: [["fa-instagram", "Instagram"], ["fa-tiktok", "TikTok"]] },
-  { name: "James Okafor", specialty: "Artist — 7 yrs", image: "https://images.pexels.com/photos/32225187/pexels-photo-32225187.jpeg?auto=compress&cs=tinysrgb&w=600", socials: [["fa-instagram", "Instagram"], ["fa-youtube", "YouTube"]] },
-  { name: "Lena Kim", specialty: "Artist — 6 yrs", image: "https://images.pexels.com/photos/13765704/pexels-photo-13765704.jpeg?auto=compress&cs=tinysrgb&w=600", socials: [["fa-instagram", "Instagram"], ["fa-facebook", "Facebook"]] },
+const ARTISTS: FeaturedArtistData[] = [
+  {
+    name: "Marcus Chen",
+    role: "Founder",
+    specialty: "Founder & Lead Artist — Realism, Black & Grey",
+    image: pexels(20519299, 800),
+    imageAlt: "Marcus Chen, founder and lead artist",
+    bio: [
+      "Marcus has spent over a decade refining a single craft: permanent tattooing. Working almost entirely in realism and black & grey, he treats skin as a canvas and light as the medium — building depth with nothing but shadow, negative space and an instinct for anatomy.",
+      "Every piece starts in a free consultation. Marcus sketches until the idea on the page matches the idea behind your eyes, then talks you through placement, scale and session length honestly.",
+    ],
+    stats: [
+      { value: "12+", label: "Years Behind The Needle" },
+      { value: "900+", label: "Permanent Pieces" },
+      { value: "6", label: "Industry Awards" },
+    ],
+    socials: [
+      ["fa-instagram", "Instagram"],
+      ["fa-twitter", "Twitter"],
+      ["fa-pinterest", "Pinterest"],
+    ],
+  },
+  {
+    name: "Sofia Reyes",
+    role: "Senior Artist",
+    specialty: "Senior Artist — Fine Line & Botanical",
+    image: pexels(37023014, 800),
+    imageAlt: "Sofia Reyes, senior artist",
+    bio: [
+      "Sofia draws her linework with a single needle and almost no hesitation. Trained in fine-line and botanical illustration, she is the artist to see for anything that has to stay delicate at a distance and hold up close.",
+      "Her sessions are unhurried by design. Sofia caps each sitting at three hours so the work stays precise, and she will happily split a larger piece across visits rather than rush the line.",
+    ],
+    stats: [
+      { value: "9", label: "Years Behind The Needle" },
+      { value: "640+", label: "Permanent Pieces" },
+      { value: "4", label: "Industry Awards" },
+    ],
+    socials: [
+      ["fa-instagram", "Instagram"],
+      ["fa-tiktok", "TikTok"],
+      ["fa-pinterest", "Pinterest"],
+    ],
+  },
+  {
+    name: "James Okafor",
+    role: "Artist",
+    specialty: "Artist — Japanese & Traditional",
+    image: pexels(32225187, 800),
+    imageAlt: "James Okafor, Japanese and traditional artist",
+    bio: [
+      "James works in the traditional East Asian tradition — bold outlines, flat colour, and compositions that reward a full back or a full sleeve. He is a student of the old references and a careful translator of them.",
+      "Large traditional work is booked across multiple sessions. James maps the placement with you first, then works in deliberate blocks so the piece stays balanced from the first sitting to the last.",
+    ],
+    stats: [
+      { value: "7", label: "Years Behind The Needle" },
+      { value: "310+", label: "Permanent Pieces" },
+      { value: "3", label: "Industry Awards" },
+    ],
+    socials: [
+      ["fa-instagram", "Instagram"],
+      ["fa-youtube", "YouTube"],
+    ],
+  },
+  {
+    name: "Lena Kim",
+    role: "Artist",
+    specialty: "Artist — Geometric & Cover-Ups",
+    image: pexels(13765704, 800),
+    imageAlt: "Lena Kim, geometric and cover-up artist",
+    bio: [
+      "Lena builds with straight lines and negative space, and she is the person to see when old work needs to disappear. Her cover-ups treat the previous tattoo as structure rather than something to hide.",
+      "She consults in person wherever possible, checking how the light falls across the area across a full day before she commits to a plan.",
+    ],
+    stats: [
+      { value: "6", label: "Years Behind The Needle" },
+      { value: "250+", label: "Permanent Pieces" },
+      { value: "2", label: "Industry Awards" },
+    ],
+    socials: [
+      ["fa-instagram", "Instagram"],
+      ["fa-facebook", "Facebook"],
+    ],
+  },
 ];
 
 const STUDIO = [
@@ -131,10 +212,20 @@ export default function AboutPage() {
               Meet The <span className="gradient-text">Artists</span>
             </h2>
             <p className="section-subtitle">
-              Award-winning artists dedicated to their craft, each with a unique style and vision.
+              Four artists, one standard. Every permanent piece and every piercing is
+              performed in-house by the person whose name is on the door.
             </p>
           </div>
-          <ArtistsGrid artists={ARTISTS} style={{ marginTop: 60 }} />
+          <div className="artist-roster">
+            {ARTISTS.map((artist, i) => (
+              <FeaturedArtist
+                artist={artist}
+                key={artist.name}
+                reverse={i % 2 === 1}
+                compact
+              />
+            ))}
+          </div>
         </div>
       </section>
 

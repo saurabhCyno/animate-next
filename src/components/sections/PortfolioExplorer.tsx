@@ -20,6 +20,8 @@ type Props = {
   items: PortfolioItemData[];
   /** Omit to render the plain heading with no filter bar (custom-tattoos page). */
   filters?: string[];
+  /** Maps a filter value to its visible label, e.g. `permanent-tattoos` -> `Permanent Tattoos`. */
+  filterLabels?: Record<string, string>;
   variant: "home" | "page";
   label: string;
   title: ReactNode;
@@ -39,6 +41,7 @@ type Props = {
 export default function PortfolioExplorer({
   items,
   filters,
+  filterLabels,
   variant,
   label,
   title,
@@ -90,7 +93,7 @@ export default function PortfolioExplorer({
                   key={f}
                   onClick={() => setFilter(f)}
                 >
-                  {f === "all" ? "All" : f}
+                  {f === "all" ? "All" : filterLabels?.[f] ?? f}
                 </button>
               ))}
             </div>

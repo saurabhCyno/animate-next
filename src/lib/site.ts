@@ -25,12 +25,13 @@ export const QUICK_LINKS = [
   { label: "Contact", href: "/contact" },
 ] as const;
 
+/** Footer "Popular Services" - the five best-known services, deepest-linked. */
 export const SERVICE_LINKS = [
-  { label: "Custom Tattoos", href: "/services/custom-tattoos" },
-  { label: "Realism", href: "/services" },
-  { label: "Black & Grey", href: "/services" },
-  { label: "Cover-Ups", href: "/services" },
-  { label: "Piercings", href: "/services" },
+  { label: "Permanent Tattoos", href: "/services/permanent-tattoo" },
+  { label: "Earlobe Piercing", href: "/services/piercing#standard-earlobe" },
+  { label: "Nose Piercing", href: "/services/piercing#nose" },
+  { label: "Belly Piercing", href: "/services/piercing#belly" },
+  { label: "Septum Piercing", href: "/services/piercing#septum" },
 ] as const;
 
 export const SOCIAL_LINKS = [

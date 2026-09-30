@@ -38,7 +38,7 @@ export default function SiteFooter() {
           </div>
 
           <div>
-            <h4 className="footer-heading">Services</h4>
+            <h4 className="footer-heading">Popular Services</h4>
             <div className="footer-links">
               {SERVICE_LINKS.map((link) => (
                 <Link key={link.label} href={link.href}>

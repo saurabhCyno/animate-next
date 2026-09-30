@@ -20,6 +20,7 @@ import CounterAnimation from "@/components/fx/CounterAnimation";
 import MagneticButtons from "@/components/fx/MagneticButtons";
 import ServiceCardBackgrounds from "@/components/fx/ServiceCardBackgrounds";
 import GsapEffects from "@/components/fx/GsapEffects";
+import HashScroller from "@/components/fx/HashScroller";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -89,6 +90,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <MagneticButtons />
         <ServiceCardBackgrounds />
         <GsapEffects />
+        <HashScroller />
       </body>
     </html>
   );

@@ -50,7 +50,7 @@ export default function CustomCursor() {
 
   useEffect(() => {
     const targets = document.querySelectorAll<HTMLElement>(
-      "a, button, .service-card, .portfolio-item, .artist-card, .filter-btn, .portfolio-page-item",
+      "a, button, .service-card, .portfolio-item, .artist-card, .filter-btn, .portfolio-page-item, .piercing-card, .piercing-detail",
     );
     targets.forEach((el) => {
       el.addEventListener("mouseenter", cursorEnter);

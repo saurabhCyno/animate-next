@@ -10,7 +10,14 @@ export type ServiceCardData = {
 };
 
 /** Port of the `.services-grid` block from index.html. */
-export default function ServiceCards({ services }: { services: ServiceCardData[] }) {
+export default function ServiceCards({
+  services,
+  gridClassName = "",
+}: {
+  services: ServiceCardData[];
+  /** Extra classes on `.services-grid`, e.g. `services-grid--two`. */
+  gridClassName?: string;
+}) {
   return (
     <section className="section" style={{ background: "var(--bg-secondary)" }}>
       <div className="container">
@@ -22,12 +29,15 @@ export default function ServiceCards({ services }: { services: ServiceCardData[]
               Premium <span className="gradient-text">Services</span>
             </>
           }
-          subtitle="From intricate realism to bold traditional work, our artists master every style with precision and passion."
+          subtitle="Two disciplines, one standard. Permanent tattoo and professional piercing, delivered with precision and care."
         />
 
-        <div className="services-grid">
-          {services.map((service) => (
+        <div className={`services-grid ${gridClassName}`.trim()}>
+          {services.map((service, i) => (
             <div className="service-card" key={service.title} data-bg={service.image}>
+              <span className="service-card-index">
+                {String(i + 1).padStart(2, "0")}
+              </span>
               <div className="service-card-icon">
                 <i className={`fas ${service.icon}`} />
               </div>
