@@ -66,12 +66,10 @@ const ARTISTS: FeaturedArtistData[] = [
 ];
 
 const STUDIO = [
-  { src: "https://images.pexels.com/photos/19548529/pexels-photo-19548529.jpeg?auto=compress&cs=tinysrgb&w=800", alt: "Studio Interior" },
-  { src: "https://images.pexels.com/photos/7147780/pexels-photo-7147780.jpeg?auto=compress&cs=tinysrgb&w=600", alt: "Tattoo Station" },
-  { src: "https://images.pexels.com/photos/10552040/pexels-photo-10552040.jpeg?auto=compress&cs=tinysrgb&w=600", alt: "Studio Waiting Area" },
-  { src: "https://images.pexels.com/photos/6593509/pexels-photo-6593509.jpeg?auto=compress&cs=tinysrgb&w=600", alt: "Equipment" },
-  { src: "https://images.pexels.com/photos/18078748/pexels-photo-18078748.jpeg?auto=compress&cs=tinysrgb&w=600", alt: "Art Display" },
-  { src: "https://images.pexels.com/photos/4121065/pexels-photo-4121065.jpeg?auto=compress&cs=tinysrgb&w=600", alt: "Gallery Wall" },
+  { src: "/images/studio/studio-1.jpeg", alt: "Inkspiration Studio Interior" },
+  { src: "/images/studio/studio-2.jpeg", alt: "Tattoo Station" },
+  { src: "/images/studio/studio-3.jpeg", alt: "Studio Workspace" },
+  { src: "/images/studio/studio-4.jpeg", alt: "Studio Detail" },
 ];
 
 const CERTS: CertItem[] = [

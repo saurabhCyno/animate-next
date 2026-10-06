@@ -3849,3 +3849,26 @@
     transform: scale(1);
   }
 }
+
+/* Deviation from the source (not in ../css/style.css): the about page's studio
+   gallery has 4 images and the user wants a flat 2-up grid of square tiles at
+   every breakpoint — so these rules also neutralise the source's featured
+   first image (`span 2` rows/columns) and its 300px row height. Clicking a
+   tile opens the lightbox, which shows the full image uncropped. */
+.studio-gallery {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.studio-gallery img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.studio-gallery img:nth-child(1) {
+  grid-column: span 1;
+  grid-row: span 1;
+  height: auto;
+}

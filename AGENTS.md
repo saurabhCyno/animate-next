@@ -222,6 +222,10 @@ The user edited these directly — read the files before assuming the old values
 
 ## Session log - 2026-10-06
 
+> **Superseded same day** — the `PIERCING_CARD_IMAGES` override described here was
+> removed later on 2026-10-06; all imagery now lives in `PIERCINGS[].image`. See
+> "Later on 2026-10-06" below.
+
 The six piercing cards on `/services` now use **area-specific close-ups** instead of
 shared `PIERCINGS[].image` values. The override is local to
 `src/app/services/page.tsx`: `PIERCING_CARD_IMAGES` (slug-keyed) is applied as
@@ -258,6 +262,99 @@ placement — verified against Pexels' own alt text, not by eye:
   wash) rests visible on mobile. The lift/shadow/border of `:hover` are deliberately
   not rest-applied. Keep this when diffing breakpoints against `../css/responsive.css`
   — it is intentional drift, not merge error.
+
+### Later on 2026-10-06 — shared data, hero videos, intro video
+
+**`PIERCING_CARD_IMAGES` removed.** All piercing imagery is now single-sourced from
+`PIERCINGS[].image` in `src/lib/services.ts`; `/services` cards render
+`data-bg={piercing.image}` again. Changing an image once fixes both routes.
+
+**All 17 piercing images replaced** (candidates chosen from Pexels alt text only —
+this model cannot view images; the user reviews by eye and rejects):
+
+| placement | was → now |
+|---|---|
+| Standard Earlobe | 7400018 → 7479508 (ear + diamond stud) |
+| Tragus | 20858257 → 4857708 (ear piercings) |
+| Conch | 3396041 → 15799256 (ear + multiple piercings) |
+| Daith | 31939281 → 7667083 → **15743948** (golden hoop close-up; 7667083 rejected by user) |
+| Flat | 30579113 → 7400019 (ear + emerald stud) |
+| Industrial | 36587163 → 28469072 (B&W ear, multiple piercings) |
+| Dimple | 3309590 → 14001863 (smiling woman with dimples) |
+| Nose | 9164794 → 7230416 (close-up "showcasing her nose piercing"; old one was a septum shot) |
+| Septum | 39842853 → 13161481 (close-up showcasing septum) |
+| Eyebrow | 2474502 → 16744733 (B&W close-up featuring eyebrow piercing) |
+| Labret | 37722196 → 36269316 (lips close-up with piercing) |
+| Smiley | 31603891 → 39842791 → **3762442** (smiling lips close-up; 39842791 rejected, 16212691 was a dead 404 id) |
+| Web | 5871299 → 8058729 → **5546472** (tongue-out close-up; 8058729 rejected) |
+| Belly | 18491011 → 4224435 (pierced belly button) |
+| Dermal | 34041395 → 11560614 (collarbone + flat jewels) |
+| Tongue | 36587165 → 29400911 (pierced tongue out) |
+| Sternum | 35391766 → 8669369 (chest close-up) |
+
+**Content corrections, confirmed with the user via the question tool:**
+
+- **Dimple = cheek**, not inner ear. `category` changed `ear` → `face`, desc/detail
+  rewritten to cheek wording; it now groups under Face on the piercing page.
+- **Web = tongue web** (the frenulum under the tongue), not the hand web between
+  thumb and index finger. desc/detail rewritten; `category: "face"` was already right.
+
+**Hero videos:**
+
+- The tattoo hero "not rendering" bug was a 404: `videoSrc` pointed at
+  `/videos/The Real Gangsta Tattoo.mp4`, but the file lives in
+  `public/videos/permanent-tattoos/`. Path corrected; verified in prerendered HTML.
+- Piercing hero: `image={pexels(4121065, 1920)}` →
+  `videoSrc="/videos/piercing/ear-piercing/Ear Piercing.mp4"` + `poster={pexels(4121065, 1920)}`.
+
+**Intro section video:** the `<img>` in the `/services/piercing` intro
+(`.about-image-wrapper reveal-right`) is now `<video src="/videos/piercing/lip-piercing/lip-piercing.mp4"
+autoPlay muted loop playsInline>`, mirroring the tattoo page's intro; the old still
+(32187703) became the `poster`. The existing `.about-image-wrapper img, video` rule
+already gives videos the 600/400 cover treatment — no CSS was added.
+
+**Open loose ends from this session:**
+
+- Every image pick is an **alt-text guess**; the user validates by eye and rejects
+  ones that look wrong (daith/nose/smiley/web each went through 1–2 swaps). Daith's
+  current pick (15743948) may still be rejected — alternates offered: 11390512,
+  13574852, 7400018. Keep this workflow: search via `r.jina.ai`, verify CDN url
+  returns `200`, let the user look at it.
+- **Stale `next start` servers on ports 3111/3112** serve an old build (their HTML
+  references a deleted CSS hash → 404); a `next dev` runs on 3000. If the user says
+  "images not updating", kill the stale servers first — the build itself was verified
+  current by grepping `.next/server/app/*.html`.
+- Dead Pexels ids found along the way (404 on CDN): 16212691, 69833.
+
+## Session log - 2026-10-06 (later): About studio gallery
+
+The "Our Studio" section on `/about` now uses the user's own photos and opens in
+the lightbox.
+
+- **Images**: the six hot-linked Pexels placeholders in `STUDIO`
+  (`src/app/about/page.tsx`) were replaced with the four local files the user
+  dropped in `public/images/studio/` — `studio-1.jpeg` … `studio-4.jpeg`, alt
+  text "Inkspiration Studio Interior / Tattoo Studio Workspace / Studio Detail".
+  `STUDIO` is the only gallery data on that page; no other file hardcodes studio
+  images.
+- **`StudioGallery.tsx` is now a client component.** It calls
+  `useLightbox().register()` on mount and `open(index)` per image, the same
+  pattern as `PortfolioExplorer`. The source `Lightbox` class (js/main.js) only
+  ever bound `.portfolio-item` / `.portfolio-page-item`, so this is a deliberate
+  deviation — the user asked for it. The existing `.lightbox img` rule already
+  uses `object-fit: contain` at 90% viewport, so the click shows the **full,
+  uncropped image**; no lightbox CSS was touched.
+- **Layout deviation, appended to the end of `globals.css`** (after the service
+  card touch block): `.studio-gallery` is forced to `repeat(2, 1fr)` at every
+  breakpoint with square tiles (`aspect-ratio: 1/1`, `object-fit: cover`,
+  `cursor: pointer`), and `.studio-gallery img:nth-child(1)` is neutralised back
+  to `span 1` / `height: auto`. This overrides the source's featured-first-image
+  `span 2` rows, its 300px row height, the 768px 1-col rule and the 480px 1-col
+  rule — a flat 2×2 grid everywhere. Keep this block when diffing against
+  `../css/style.css`; it is intentional drift, not merge error.
+- Verified: `npx tsc --noEmit` and `npm run lint` clean (only the pre-existing
+  `CompareSection` warning in `our-work/page.tsx`). A full `npm run build` was
+  started but aborted by the user — re-run it before trusting prerender.
 
 ## Stack
 
@@ -353,6 +450,7 @@ the authority and the merge has already drifted once (see session log).
 | `src/components/sections/CompareSection.tsx` | `CompareSlider` class |
 | `src/components/sections/FaqList.tsx` | `FAQ` class |
 | `src/components/sections/ContactSection.tsx` | contact form + `ContactForm` class |
+| `src/components/sections/StudioGallery.tsx` | `.studio-gallery` markup — **client since 2026-10-06**, registers with the lightbox and opens on click |
 | `src/components/sections/ArtistsGrid.tsx` | **dead** — superseded by `FeaturedArtist`, kept as a faithful port |
 | `src/components/sections/HorizontalScroll.tsx` | **dead** — the `/our-work` call site was removed on 2026-10-05 |
 
@@ -390,7 +488,7 @@ Passing:
 
 ```
 npx tsc --noEmit     # clean
-npm run lint         # clean
+npm run lint         # 1 warning only: CompareSection unused in our-work/page.tsx (user's own edit)
 npm run build        # 7 routes prerendered static
 next start + fetch   # 200 on all 7 routes, both 308 redirects land
 ```
@@ -406,6 +504,14 @@ The 2026-10-05 media library was verified the same way: `next start` returned
 `hero-bg.mp4`, and `/`, `/our-work` and `/services/permanent-tattoo` were grepped for
 their `/images/...` + `/videos/...` paths, derived titles, derived meta, the three
 `data-filter` values and one `.portfolio-play` badge per clip.
+
+The 2026-10-06 image/video pass was verified by grepping the freshly built
+`.next/server/app/services.html` + `services/piercing.html` with
+`[System.IO.File]::ReadAllText`: all 17 final ids present on the piercing route, no
+superseded ids anywhere, the 6 card ids + nose + daith correct on `/services`, both
+hero `videoSrc` paths and the intro `lip-piercing.mp4` path embedded, and the dev
+server returned `200 video/mp4` for that clip. What is **not** verified is whether
+the photos actually depict the named placements — only the user's eyes can do that.
 
 **Not yet verified: browser pixel parity.** No screenshot comparison against the
 original has been run, and none of the 2026-09-30 redesigns have been looked at in a
@@ -424,6 +530,10 @@ unconfirmed. This is the main outstanding item — see "Next steps".
    cannot be checked in static HTML.
 4. Check GSAP scroll-triggered animations actually fire at the right scroll positions,
    especially the `/our-work` pin after the image-load refresh.
+5. **2026-10-06 follow-ups**: swap daith (15743948) if the user's eye review rejects
+   it — alternates 11390512 / 13574852 / 7400018, same workflow as the other 16;
+   kill the stale `next start` servers on 3111/3112 (old build, dead CSS hash) so
+   the user stops seeing outdated images.
 
 ## Known deliberate deviation
 
