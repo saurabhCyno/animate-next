@@ -18,6 +18,13 @@ type LightboxContextValue = {
 
 const LightboxContext = createContext<LightboxContextValue | null>(null);
 
+/**
+ * The gallery registers bare paths, so the extension is what tells us whether a
+ * slide is a still to show or a clip to play. `gallery.ts` is server-only, so
+ * this cannot import the media type from there.
+ */
+const VIDEO_PATTERN = /\.(mp4|webm|mov|m4v|ogv)$/i;
+
 export function useLightbox(): LightboxContextValue {
   const ctx = useContext(LightboxContext);
   if (!ctx) throw new Error("useLightbox must be used inside <LightboxProvider>");
@@ -92,8 +99,16 @@ export default function LightboxProvider({ children }: { children: ReactNode }) 
         <span className="lightbox-next" onClick={next}>
           &#10095;
         </span>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img id="lightbox-img" src={current ?? ""} alt="" />
+        {/* Rendered only while open, so a clip is unmounted — and stops playing —
+            the moment the lightbox closes. */}
+        {active && current ? (
+          VIDEO_PATTERN.test(current) ? (
+            <video src={current} controls autoPlay playsInline />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img id="lightbox-img" src={current} alt="" />
+          )
+        ) : null}
       </div>
     </LightboxContext.Provider>
   );

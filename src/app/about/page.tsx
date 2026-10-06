@@ -8,7 +8,6 @@ import StudioGallery from "@/components/sections/StudioGallery";
 import CertificationsGrid, { type CertItem } from "@/components/sections/CertificationsGrid";
 import StatsGrid from "@/components/sections/StatsGrid";
 import CTASection from "@/components/sections/CTASection";
-import { pexels } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About Us | Inkspiration",
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 const STORY = [
-  "What began as a single artist's vision in a small downtown studio has evolved into one of the most respected names in the tattoo industry. Marcus Chen founded Inkspiration with a simple belief: that every tattoo should be a work of art.",
+  "What began as a single artist's vision in a small downtown studio has evolved into one of the most respected names in the tattoo industry. Karan Bakshi founded Inkspiration with a simple belief: that every tattoo should be a work of art.",
   "Over the past decade, we've grown from a one-man operation into a collective of world-class artists, each bringing their unique perspective and expertise. Our studio has been featured in numerous publications and has received multiple industry awards for both artistry and studio excellence.",
   "Today, Inkspiration stands as a destination for collectors who seek the highest quality tattooing in an environment that balances professionalism with creative freedom.",
 ];
@@ -44,87 +43,26 @@ const MISSIONS: MissionItem[] = [
 
 const ARTISTS: FeaturedArtistData[] = [
   {
-    name: "Marcus Chen",
+    name: "Karan Bakshi",
     role: "Founder",
-    specialty: "Founder & Lead Artist — Realism, Black & Grey",
-    image: pexels(20519299, 800),
-    imageAlt: "Marcus Chen, founder and lead artist",
+    specialty: "Founder & Master Artist — Inkspiration",
+    image: "/images/artist.jpg",
+    imageAlt: "Karan Bakshi, founder and master artist",
     bio: [
-      "Marcus has spent over a decade refining a single craft: permanent tattooing. Working almost entirely in realism and black & grey, he treats skin as a canvas and light as the medium — building depth with nothing but shadow, negative space and an instinct for anatomy.",
-      "Every piece starts in a free consultation. Marcus sketches until the idea on the page matches the idea behind your eyes, then talks you through placement, scale and session length honestly.",
+      "Karan Bakshi built Inkspiration around a single belief: great tattooing is where artistry, precision and individuality come together. As founder and master artist, he approaches every tattoo as a custom piece of art, weighing composition, flow and the way a design sits on the body.",
+      "Every tattoo begins with a conversation. Karan refines the concept with you, then recommends the size, placement and approach for your skin. Revisions before the stencil are unlimited, the rate is a flat ₹800 an inch, and the touch-up once it has healed is free.",
     ],
     stats: [
-      { value: "12+", label: "Years Behind The Needle" },
+      { value: "5+", label: "Years Behind The Needle" },
       { value: "900+", label: "Permanent Pieces" },
-      { value: "6", label: "Industry Awards" },
+      { value: "5+", label: "Industry Recognitions" },
     ],
     socials: [
       ["fa-instagram", "Instagram"],
       ["fa-twitter", "Twitter"],
       ["fa-pinterest", "Pinterest"],
     ],
-  },
-  {
-    name: "Sofia Reyes",
-    role: "Senior Artist",
-    specialty: "Senior Artist — Fine Line & Botanical",
-    image: pexels(37023014, 800),
-    imageAlt: "Sofia Reyes, senior artist",
-    bio: [
-      "Sofia draws her linework with a single needle and almost no hesitation. Trained in fine-line and botanical illustration, she is the artist to see for anything that has to stay delicate at a distance and hold up close.",
-      "Her sessions are unhurried by design. Sofia caps each sitting at three hours so the work stays precise, and she will happily split a larger piece across visits rather than rush the line.",
-    ],
-    stats: [
-      { value: "9", label: "Years Behind The Needle" },
-      { value: "640+", label: "Permanent Pieces" },
-      { value: "4", label: "Industry Awards" },
-    ],
-    socials: [
-      ["fa-instagram", "Instagram"],
-      ["fa-tiktok", "TikTok"],
-      ["fa-pinterest", "Pinterest"],
-    ],
-  },
-  {
-    name: "James Okafor",
-    role: "Artist",
-    specialty: "Artist — Japanese & Traditional",
-    image: pexels(32225187, 800),
-    imageAlt: "James Okafor, Japanese and traditional artist",
-    bio: [
-      "James works in the traditional East Asian tradition — bold outlines, flat colour, and compositions that reward a full back or a full sleeve. He is a student of the old references and a careful translator of them.",
-      "Large traditional work is booked across multiple sessions. James maps the placement with you first, then works in deliberate blocks so the piece stays balanced from the first sitting to the last.",
-    ],
-    stats: [
-      { value: "7", label: "Years Behind The Needle" },
-      { value: "310+", label: "Permanent Pieces" },
-      { value: "3", label: "Industry Awards" },
-    ],
-    socials: [
-      ["fa-instagram", "Instagram"],
-      ["fa-youtube", "YouTube"],
-    ],
-  },
-  {
-    name: "Lena Kim",
-    role: "Artist",
-    specialty: "Artist — Geometric & Cover-Ups",
-    image: pexels(13765704, 800),
-    imageAlt: "Lena Kim, geometric and cover-up artist",
-    bio: [
-      "Lena builds with straight lines and negative space, and she is the person to see when old work needs to disappear. Her cover-ups treat the previous tattoo as structure rather than something to hide.",
-      "She consults in person wherever possible, checking how the light falls across the area across a full day before she commits to a plan.",
-    ],
-    stats: [
-      { value: "6", label: "Years Behind The Needle" },
-      { value: "250+", label: "Permanent Pieces" },
-      { value: "2", label: "Industry Awards" },
-    ],
-    socials: [
-      ["fa-instagram", "Instagram"],
-      ["fa-facebook", "Facebook"],
-    ],
-  },
+  }
 ];
 
 const STUDIO = [
@@ -179,7 +117,7 @@ export default function AboutPage() {
             <div className="about-image-wrapper reveal-right parallax-wrapper">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="https://images.pexels.com/photos/37023010/pexels-photo-37023010.jpeg?auto=compress&cs=tinysrgb&w=800"
+                src="https://ik.imagekit.io/ovwcb90gc/where-art-meets-skin.jpeg?updatedAt=1791200423976"
                 alt="Tattoo Studio"
                 className="parallax-image"
               />
@@ -209,11 +147,10 @@ export default function AboutPage() {
           <div className="reveal">
             <span className="section-label">Our Team</span>
             <h2 className="section-title">
-              Meet The <span className="gradient-text">Artists</span>
+              Meet The <span className="gradient-text">Artist</span>
             </h2>
             <p className="section-subtitle">
-              Four artists, one standard. Every permanent piece and every piercing is
-              performed in-house by the person whose name is on the door.
+              One artist, one standard. Every tattoo and piercing is performed in-house by Karan Bakshi — the founder and master artist behind Inkspiration.
             </p>
           </div>
           <div className="artist-roster">

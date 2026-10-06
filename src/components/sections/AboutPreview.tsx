@@ -22,7 +22,7 @@ export default function AboutPreview() {
           <div className="about-image-wrapper reveal-left parallax-wrapper">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://images.pexels.com/photos/37023010/pexels-photo-37023010.jpeg?auto=compress&cs=tinysrgb&w=800"
+              src="https://ik.imagekit.io/ovwcb90gc/where-art-meets-skin.jpeg?updatedAt=1791200423976"
               alt="Tattoo Studio Interior"
               className="parallax-image"
             />

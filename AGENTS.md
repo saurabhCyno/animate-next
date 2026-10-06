@@ -31,6 +31,9 @@ was reframed, a piercing service was added, and several page sections were redes
 All service pricing is **₹ INR**. Read this before touching services, the homepage,
 About, Our Work, or the footer.
 
+> The gallery item counts in the "Section redesigns" table below were superseded on
+> 2026-10-05 — the portfolio is now file-driven. See that log.
+
 ### Business content
 
 - **Canonical route is `/services/permanent-tattoo`** (singular "tattoo"), chosen by me
@@ -90,14 +93,132 @@ jumps **instantly, not smoothly**, because Lenis owns scroll position.
 1. `src/lib/services.ts:338` — the daith detail claims "we use a professional piercing
    gun", which contradicts the hollow-needle-only policy stated elsewhere on the same
    page (and the FAQ at `:549` asks the question for the wrong answer). Needs a rewrite.
+### Open issues — status after the 2026-10-05 session
+
+Re-checked on 2026-10-05. Items 1–2 are **still open content bugs**; 3–4 are now dead
+code rather than wrong copy; 5 is unchanged.
+
+1. `src/lib/services.ts:329` — the daith detail still claims "we use a professional
+   piercing gun", which contradicts the hollow-needle-only policy stated elsewhere on the
+   same page (and the FAQ at `:540` asks the question for the wrong answer). Needs a
+   rewrite. **Still open.**
 2. `src/app/services/page.tsx:160` says "the five most requested" but line 168 does
-   `.slice(0, 6)` — six render. Either the copy or the slice is wrong.
-3. `src/components/sections/ArtistsGrid.tsx` is now **dead code** — nothing imports it.
-   Kept deliberately as a faithful port of the source `.artists-grid` markup. Safe to
-   delete if the user wants.
-4. `HorizontalScroll` on `/our-work` still carries tattoo-only titles ("Japanese Full
-   Back", "Color Masterpiece") and now sits under a gallery that includes piercings.
-5. **Nothing in the redesigned sections has been visually verified in a browser.**
+   `.slice(0, 6)` — six render. Either the copy or the slice is wrong. **Still open.**
+3. `src/components/sections/ArtistsGrid.tsx` — **dead code**, nothing imports it. Kept
+   deliberately as a faithful port of the source `.artists-grid` markup.
+4. ~~`HorizontalScroll` tattoo-only titles~~ — **resolved by removal.** The strip is
+   disabled on `/our-work` and its `SCROLL_ITEMS` Pexels data was deleted. The component
+   itself is now unused too.
+5. **Nothing in the redesigned sections has been visually verified in a browser.** This
+   is still the biggest gap, and it now includes the new media library and video tiles.
+6. **New:** the testimonial avatar images are still hot-linked Pexels stock photos, so
+   three Indian client names are attached to unrelated faces. There is no portrait media
+   in `public/images` yet.
+7. **New:** `public/images/piercing/ear-pericing/` is misspelled while
+   `public/videos/piercing/ear-piercing/` is not. Both render as "Ear Piercing" (the
+   label builder tolerates either), so it is cosmetic — but it will show up in URLs.
+
+## Session log — 2026-10-05
+
+Two threads: the portfolio galleries became **file-driven** instead of hardcoded Pexels
+placeholders, and the site copy was rewritten to an **Indian, single-artist** studio.
+The user made several of the content edits themselves — read the files before assuming
+older values.
+
+### What this session changed, in order
+
+1. `src/assets/` (images the user dropped in) **moved to `public/images/`** — plain
+   `<img>` cannot reference `src/assets`, and the lightbox needs a servable URL.
+2. `src/lib/gallery.ts` created: scans both media libraries at build time.
+3. Home, `/our-work` and `/services/permanent-tattoo` rewired to it; every hardcoded
+   portfolio array deleted.
+4. The three work clips moved into `public/videos/<category>/…` so they file under the
+   same tabs the stills do. The user chose this layout over filename-based guessing.
+5. `LightboxProvider` taught to play video; `PortfolioExplorer` renders `<video>` tiles.
+6. Testimonials + About artist roster rewritten Indian, then the user cut the roster to
+   one artist and added `/images/artist.jpg`.
+7. The permanent-tattoo page's "Designed For You" section now plays a real clip.
+8. Dead imports from the user's own edits cleaned up (lint back to zero warnings).
+9. About's "Inkspiration Legacy" paragraph still named **Marcus Chen** as the founder
+   after the artist was renamed — corrected to Karan Bakshi. `grep` confirms no old
+   artist name survives anywhere in `src/`. **If the founder is ever renamed, it is a
+   find-and-replace across `app/page.tsx` (the `FEATURED_ARTIST` block *and* the Rohan
+   Mehta testimonial, which names him) plus `app/about/page.tsx` (`STORY` + `ARTISTS`).**
+
+### Media library
+
+`src/lib/gallery.ts` scans `public/images` and `public/videos` at build time and derives
+the `PortfolioExplorer` items from them. **Adding media needs no code change** — drop the
+file in the right folder and rebuild. Both libraries use the same two shapes:
+
+```
+public/images/
+  permanent-tattoos/<name>.jpg    -> "Permanent Tattoos" tab
+  piercing/<type>/<name>.jpg      -> "Piercing" tab, one folder per placement type
+
+public/videos/
+  permanent-tattoos/<name>.mp4    -> "Permanent Tattoos" tab
+  piercing/<type>/<name>.mp4      -> "Piercing" tab, one folder per placement type
+```
+
+- Accepted extensions: images `.jpg .jpeg .png .webp .avif`; video `.mp4 .mov .webm .m4v`.
+- Titles and alt text are derived from the filename: `shiv-krishna.jpeg` → "Shiv Krishna".
+- The piercing tab's per-item meta is derived from its folder: `ear-piercing/` →
+  "Ear Piercing" (a trailing `piercing`/`pericing` word is dropped).
+- Files sitting directly in `public/images` or `public/videos` are ignored on purpose —
+  `videos/hero-bg.mp4` is a page asset, not portfolio work. Portfolio media always belongs
+  in one of the category folders.
+- Tattoos sort first, so the "All" tab leads with permanent work. Within a category, stills
+  come before clips.
+- The tab list and labels are exported as `PORTFOLIO_FILTERS` / `PORTFOLIO_FILTER_LABELS`;
+  don't re-declare them per page.
+- **The files live in `public/`, not `src/assets/`** — plain `<img>` / `<video>` need a
+  servable URL, and the lightbox registers the same string as the `src`.
+- **`gallery.ts` reads `node:fs`, so it is server-only.** Importing it from a client
+  component breaks the build. All consuming routes are prerendered, so the scan happens
+  once per build.
+- `PortfolioExplorer` now keys items by `image` (paths are unique; titles may not be).
+
+### Video playback
+
+`PortfolioItemData.type` (`"image" | "video"`) decides which tag `PortfolioExplorer`
+renders; video tiles get a `.portfolio-play` badge. `LightboxProvider` still registers bare
+paths, so it sniffs the extension (`VIDEO_PATTERN`) to decide between `<img>` and a
+`<video controls autoPlay playsInline>`. The slide is rendered **only while the lightbox is
+open** — the container is always mounted (`opacity: 0`), so rendering the clip
+unconditionally would leave it playing behind a closed lightbox.
+
+Autoplay is not muted, so a browser that blocks sound-on-autoplay shows the controls
+instead of playing silently. That is deliberate.
+
+### Removed
+
+All Pexels placeholder data behind the galleries is gone: `HOME_WORK` (home), `WORK`
+(`/our-work`), and `TATTOO_GALLERY` + the `GalleryImage` type (`services.ts`). The two
+`PortfolioExplorer` call sites and the permanent-tattoo page now read `gallery.ts`.
+
+Dead code, deliberately **kept** (delete if the user wants): `src/components/sections/`
+`ArtistsGrid.tsx` and `HorizontalScroll.tsx` — nothing imports either any more. Both are
+faithful ports of source markup, so they are cheap to restore.
+
+### Content the user rewrote themselves
+
+The user edited these directly — read the files before assuming the old values:
+
+- **The studio has one artist: Karan Bakshi** (founder & master artist), portrait
+  `/images/artist.jpg`. Both the homepage "Our Artist" block and About's "Meet The
+  Artist" section use it; the roster on About was cut from four `FeaturedArtist`
+  blocks down to one, and the subtitle is now "One artist, one standard."
+- **Testimonials** on the homepage are Indian clients (Rohan Mehta, Ananya Iyer,
+  Arjun Nair) covering realism, fine line and a piercing, priced from the real
+  `PIERCINGS` / `TATTOO_PRICING` figures. The avatar images are still Pexels.
+- `HorizontalScroll` is **disabled** on `/our-work` (the `SCROLL_ITEMS` Pexels block
+  was deleted). `src/components/sections/HorizontalScroll.tsx` is now unused but kept.
+- The "Designed For You" section on `/services/permanent-tattoo` renders the first
+  tattoo clip in the media library as an autoplaying muted loop
+  (`TATTOO_MEDIA.find(m => m.type === "video")`), with a tattoo still as its poster.
+  `.about-image-wrapper img, video` share one rule so the clip keeps the original
+  600px / 400px cover treatment.
 
 ## Stack
 
@@ -146,7 +267,8 @@ the authority and the merge has already drifted once (see session log).
 
 - **Plain `<img>`, never `next/image`.** The original hot-links Pexels by ID at fixed
   widths. `src/lib/site.ts` has a `pexels(id, width)` helper. Changing to `next/image`
-  would alter the request URLs and break parity.
+  would alter the request URLs and break parity. Portfolio media is local and lives under
+  `public/images` for the same reason — see the 2026-10-05 session log.
 - **The hero video is local.** Source is `../assets/videos/hero-bg.mp4`, copied to
   `public/videos/hero-bg.mp4`, referenced as `/videos/hero-bg.mp4`.
 - **`gsap.context()` + `ctx.revert()` in `GsapEffects`.** The App Router keeps client
@@ -167,7 +289,8 @@ the authority and the merge has already drifted once (see session log).
 | Path | Ports from |
 |---|---|
 | `src/lib/site.ts` | links, phone, studio info, `pexels()` |
-| `src/lib/services.ts` | **all** service content: rates, 17 piercings, FAQs, galleries, home cards, `inr()` |
+| `src/lib/services.ts` | **all** service content: rates, 17 piercings, FAQs, home cards, `inr()` |
+| `src/lib/gallery.ts` | **new** — server-only; scans `public/images` for the portfolio media |
 | `src/components/chrome/SiteHeader.tsx` | `Navigation` + `ActiveNav` (js/main.js) |
 | `src/components/chrome/SiteFooter.tsx` | `.footer` markup |
 | `src/components/chrome/Loader.tsx` | `Loader` class |
@@ -181,8 +304,9 @@ the authority and the merge has already drifted once (see session log).
 | `src/components/fx/ServiceCardBackgrounds.tsx` | `initServiceCardImages()` |
 | `src/components/fx/HashScroller.tsx` | **new** — client-nav hash scrolling for `#slug` deep links |
 | `src/components/fx/GsapEffects.tsx` | `initGSAPAnimations()` (js/animations.js) |
-| `src/components/sections/PortfolioExplorer.tsx` | `PortfolioFilter` + `Lightbox`, `variant="home" \| "page"`, `filterLabels` |
-| `src/components/sections/FeaturedArtist.tsx` | **new** — replaces `.artists-grid` on home + About; `reverse` / `compact` |
+| `src/components/sections/PortfolioExplorer.tsx` | `PortfolioFilter` + `Lightbox`, `variant="home" \| "page"`, `filterLabels`; renders `<video>` tiles when `item.type === "video"` |
+| `src/components/chrome/LightboxProvider.tsx` | `Lightbox` class — **extended 2026-10-05** to play clips; sniffs the extension, renders only while open |
+| `src/components/sections/FeaturedArtist.tsx` | **new** — replaces `.artists-grid` on home + About; `reverse` / `compact`; **one block per page since 2026-10-05** |
 | `src/components/sections/PiercingGrid.tsx` | **new** — `.piercing-grid` cards |
 | `src/components/sections/PiercingDetailList.tsx` | **new** — `.piercing-detail` rows, owns the `#slug` ids |
 | `src/components/sections/RateCard.tsx` | **new** — `.rate-card`, the ₹800/inch panel |
@@ -190,6 +314,8 @@ the authority and the merge has already drifted once (see session log).
 | `src/components/sections/CompareSection.tsx` | `CompareSlider` class |
 | `src/components/sections/FaqList.tsx` | `FAQ` class |
 | `src/components/sections/ContactSection.tsx` | contact form + `ContactForm` class |
+| `src/components/sections/ArtistsGrid.tsx` | **dead** — superseded by `FeaturedArtist`, kept as a faithful port |
+| `src/components/sections/HorizontalScroll.tsx` | **dead** — the `/our-work` call site was removed on 2026-10-05 |
 
 ## Next 16 gotchas already hit
 
@@ -213,6 +339,11 @@ the authority and the merge has already drifted once (see session log).
 - **Delete a route by removing the page *and* rebuilding.** `.next/types/validator.ts`
   and `.next/dev/types/validator.ts` keep stale route types; `rm -rf .next` before
   trusting a `tsc --noEmit` result.
+- **Verify the built HTML with `[System.IO.File]::ReadAllText`, not `Get-Content -Raw`
+  or `Select-String`.** PowerShell 5.1 defaults to ANSI, so the UTF-8 prerendered HTML
+  comes back mojibake and greps return **false negatives** — a string that is really in
+  the page reports `False`. This made a verification pass look like a failure. Use:
+  `$h = [System.IO.File]::ReadAllText("$PWD\.next\server\app\index.html"); $h.Contains("Rohan Mehta")`.
 
 ## Verification status
 
@@ -231,6 +362,12 @@ class names, nesting, item counts (14 `.marquee-item`, 6 `.service-card`, 6
 `.swiper-wrapper`) all matched. The two new service routes were verified by grepping
 the served HTML for all 17 names + prices and both 308 targets.
 
+The 2026-10-05 media library was verified the same way: `next start` returned
+`200 image/jpeg` for all five images, `200 video/mp4` for the three work clips and
+`hero-bg.mp4`, and `/`, `/our-work` and `/services/permanent-tattoo` were grepped for
+their `/images/...` + `/videos/...` paths, derived titles, derived meta, the three
+`data-filter` values and one `.portfolio-play` badge per clip.
+
 **Not yet verified: browser pixel parity.** No screenshot comparison against the
 original has been run, and none of the 2026-09-30 redesigns have been looked at in a
 browser. Font rendering, image loading, GSAP timing, and responsive breakpoints are
@@ -240,10 +377,10 @@ unconfirmed. This is the main outstanding item — see "Next steps".
 
 1. **Visual check of the redesigned sections** (the gap). Serve the original
    (`npx serve ..`) and this app side by side, capture home / about / our-work /
-   services at desktop and mobile widths, and diff.
-2. Fix the four open issues in the session log — the daith "piercing gun" copy and the
-   "five most requested" count are content bugs; `ArtistsGrid` and the
-   `HorizontalScroll` titles are cleanup.
+   services at desktop and mobile widths, and diff. This now includes the video tiles,
+   the play badge and the lightbox clip.
+2. Fix the two remaining **content** bugs in the session log — the daith "piercing gun"
+   copy and the "five most requested" count. Everything else there is dead-code cleanup.
 3. Confirm the loader, custom cursor, and scroll effects — these are client-only and
    cannot be checked in static HTML.
 4. Check GSAP scroll-triggered animations actually fire at the right scroll positions,

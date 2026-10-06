@@ -44,15 +44,6 @@ export type SizeTier = {
   featured?: boolean;
 };
 
-export type GalleryImage = {
-  image: string;
-  alt: string;
-  title: string;
-  meta: string;
-  category: string;
-  style?: React.CSSProperties;
-};
-
 /* ==========================================================================
    Permanent tattoo
    ========================================================================== */
@@ -615,7 +606,7 @@ export const SERVICES: ServiceEntry[] = [
     desc: "Seventeen ear, face and body placements performed with a sterile hollow needle and implant-grade jewellery.",
     priceLabel: `From ${inr(PIERCING_ENTRY_PRICE)}`,
     href: "/services/piercing",
-    image: pexels(4121065, 800),
+    image: pexels(5386358, 800),
     imageAlt: "Professional Piercing",
     benefits: [
       "Seventeen placements, every price listed",
@@ -686,23 +677,13 @@ export const HOME_PRIMARY_SERVICES = [
     title: "Permanent Tattoo",
     desc: `Bespoke artwork at a flat ${inr(TATTOO_RATE_PER_INCH)} per inch. Every line tells a story.`,
     href: "/services/permanent-tattoo",
-    image: pexels(37023014, 800),
+    image: 'https://img.magnific.com/free-photo/master-making-tattoo-with-iron_23-2147834107.jpg?t=st=1791197349~exp=1791200949~hmac=33c22370c49d4a0a106f4226d1b57d042b3300eef0752995464aa3f816af5dfb&w=1060',
   },
   {
     icon: "fa-circle-notch",
     title: "Piercing",
     desc: `Seventeen placements, jewellery included. From ${inr(PIERCING_ENTRY_PRICE)}.`,
     href: "/services/piercing",
-    image: pexels(4121065, 800),
+    image: pexels(3214241, 800),
   },
-];
-
-/** Gallery used on the permanent-tattoo page. */
-export const TATTOO_GALLERY: GalleryImage[] = [
-  { image: pexels(37023014, 800), alt: "Custom permanent tattoo", title: "Custom Piece", meta: "", category: "custom" },
-  { image: pexels(32225187, 600), alt: "Japanese permanent tattoo", title: "Irezumi Detail", meta: "", category: "custom" },
-  { image: pexels(6593483, 600), alt: "Black and grey permanent tattoo", title: "Black & Grey", meta: "", category: "custom" },
-  { image: pexels(1304469, 600), alt: "Realism permanent tattoo", title: "Realism Portrait", meta: "", category: "custom" },
-  { image: pexels(13765704, 600), alt: "Fine line permanent tattoo", title: "Fine Line", meta: "", category: "custom" },
-  { image: pexels(19548529, 600), alt: "Colour permanent tattoo", title: "Colour Work", meta: "", category: "custom" },
 ];

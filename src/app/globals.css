@@ -778,14 +778,16 @@
     border-radius: 4px;
   }
 
-  .about-image-wrapper img {
+  .about-image-wrapper img,
+  .about-image-wrapper video {
     width: 100%;
     height: 600px;
     object-fit: cover;
     transition: transform 0.8s;
   }
 
-  .about-image-wrapper:hover img {
+  .about-image-wrapper:hover img,
+  .about-image-wrapper:hover video {
     transform: scale(1.05);
   }
 
@@ -839,6 +841,10 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
     margin-top: 60px;
+  }
+
+  .main-services-grid{
+    grid-template-columns: repeat(2, 1fr);
   }
 
   /* Two top-level services: pair them on desktop, stack on mobile. */
@@ -1158,14 +1164,16 @@
     grid-column: span 2;
   }
 
-  .portfolio-item img {
+  .portfolio-item img,
+  .portfolio-item video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.8s;
   }
 
-  .portfolio-item:hover img {
+  .portfolio-item:hover img,
+  .portfolio-item:hover video {
     transform: scale(1.08);
   }
 
@@ -2538,14 +2546,16 @@
     grid-row: span 2;
   }
 
-  .portfolio-page-item img {
+  .portfolio-page-item img,
+  .portfolio-page-item video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.8s;
   }
 
-  .portfolio-page-item:hover img {
+  .portfolio-page-item:hover img,
+  .portfolio-page-item:hover video {
     transform: scale(1.08);
   }
 
@@ -3216,7 +3226,8 @@
     pointer-events: all;
   }
 
-  .lightbox img {
+  .lightbox img,
+  .lightbox video {
     max-width: 90%;
     max-height: 90%;
     object-fit: contain;
@@ -3408,7 +3419,8 @@
       gap: 40px;
     }
 
-    .about-image-wrapper img {
+    .about-image-wrapper img,
+    .about-image-wrapper video {
       height: 400px;
     }
 
@@ -3787,4 +3799,40 @@
       right: -12px;
     }
   }
+}
+
+/* Portfolio grid empty state — shown when a filter tab has no media yet. */
+.portfolio-empty {
+  grid-column: 1 / -1;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+/* Marks a video tile in either portfolio grid, and stays click-through so the
+   tile still opens the lightbox. */
+.portfolio-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 160, 23, 0.9);
+  background: rgba(0, 0, 0, 0.55);
+  color: var(--accent-gold);
+  font-size: 1.2rem;
+  pointer-events: none;
+}
+
+.portfolio-play i {
+  /* Nudges the glyph onto the optical centre of the circle. */
+  margin-left: 4px;
 }

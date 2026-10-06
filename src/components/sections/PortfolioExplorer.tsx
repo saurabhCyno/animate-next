@@ -3,8 +3,13 @@
 import { useEffect, useMemo, useState, type ReactNode, type CSSProperties } from "react";
 import { useLightbox } from "@/components/chrome/LightboxProvider";
 
+/** Portfolio media is stills or clips; the lightbox picks a viewer off the same field. */
+export type MediaType = "image" | "video";
+
 export type PortfolioItemData = {
+  /** Servable path under `/images` or `/videos` — also the lightbox `src`. */
   image: string;
+  type: MediaType;
   alt: string;
   title: string;
   /** Page grid renders "Realism · 8 hours"; home grid renders just "Realism". */
@@ -105,6 +110,9 @@ export default function PortfolioExplorer({
         )}
 
         <div className={gridClass}>
+          {visible.length === 0 ? (
+            <p className="portfolio-empty">No work in this category yet.</p>
+          ) : null}
           {visible.map((item) => {
             const index = items.indexOf(item);
             return (
@@ -112,11 +120,26 @@ export default function PortfolioExplorer({
                 className={`${itemClass}${item.span ? ` ${item.span}` : ""}`}
                 data-category={item.category}
                 style={item.style}
-                key={item.title}
+                key={item.image}
                 onClick={() => open(index)}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={item.image} alt={item.alt} />
+                {item.type === "video" ? (
+                  <video
+                    src={item.image}
+                    muted
+                    playsInline
+                    preload="metadata"
+                    aria-label={item.alt}
+                  />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={item.image} alt={item.alt} />
+                )}
+                {item.type === "video" ? (
+                  <span className="portfolio-play" aria-hidden="true">
+                    <i className="fas fa-play" />
+                  </span>
+                ) : null}
                 {overlay &&
                   (variant === "home" ? (
                     <div className="portfolio-item-overlay">

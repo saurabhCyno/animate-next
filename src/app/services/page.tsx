@@ -89,7 +89,7 @@ export default function ServicesPage() {
             </p>
           </div>
 
-          <div className="services-grid">
+          <div className="services-grid main-services-grid">
             {SERVICES.map((service) => (
               <div className="service-card" key={service.slug} data-bg={service.image}>
                 <div className="service-card-icon">

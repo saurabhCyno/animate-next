@@ -9,13 +9,16 @@ import PortfolioExplorer from "@/components/sections/PortfolioExplorer";
 import { pexels } from "@/lib/site";
 import {
   TATTOO_FAQS,
-  TATTOO_GALLERY,
   TATTOO_OVERVIEW,
   TATTOO_PRICING,
   TATTOO_PROCESS,
   TATTOO_SIZE_TIERS,
-  TATTOO_STYLES,
 } from "@/lib/services";
+import { TATTOO_MEDIA } from "@/lib/gallery";
+
+/** Gallery order puts stills before clips, so these are the first of each. */
+const TATTOO_VIDEO = TATTOO_MEDIA.find((item) => item.type === "video");
+const TATTOO_POSTER = TATTOO_MEDIA.find((item) => item.type === "image");
 
 export const metadata: Metadata = {
   title: "Permanent Tattoo | Inkspiration",
@@ -149,10 +152,16 @@ export default function PermanentTattooPage() {
               ))}
             </div>
             <div className="about-image-wrapper reveal-right">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={pexels(6593509, 800)}
-                alt="Tattoo design process"
+              {/* First tattoo clip in the media library; a still stands in as the
+                  poster so the section never opens on a black box. */}
+              <video
+                src={TATTOO_VIDEO?.image}
+                poster={TATTOO_POSTER?.image}
+                autoPlay
+                muted
+                loop
+                playsInline
+                aria-label={TATTOO_VIDEO?.alt ?? "Permanent tattoo in progress"}
                 style={{ width: "100%", borderRadius: 4, display: "block" }}
               />
             </div>
@@ -212,7 +221,7 @@ export default function PermanentTattooPage() {
         </div>
       </section>
 
-      <section className="section" style={{ background: "var(--bg-secondary)" }}>
+      {/* <section className="section" style={{ background: "var(--bg-secondary)" }}>
         <div className="container">
           <div className="reveal" style={{ textAlign: "center", marginBottom: 20 }}>
             <span className="section-label">Styles</span>
@@ -227,7 +236,7 @@ export default function PermanentTattooPage() {
 
           <MissionGrid items={TATTOO_STYLES} />
         </div>
-      </section>
+      </section> */}
 
       <section className="section">
         <div className="container">
@@ -292,7 +301,7 @@ export default function PermanentTattooPage() {
       </section>
 
       <PortfolioExplorer
-        items={TATTOO_GALLERY}
+        items={TATTOO_MEDIA}
         variant="home"
         overlay={false}
         label="Portfolio"
