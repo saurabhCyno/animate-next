@@ -98,8 +98,8 @@ export default function PiercingPage() {
             Home / <a href="/services">Services</a> / <span>Piercing</span>
           </>
         }
-        image={pexels(4121065, 1920)}
-        imageAlt="Professional body piercing"
+        videoSrc="/videos/piercing/ear-piercing/Ear Piercing.mp4"
+        poster={pexels(4121065, 1920)}
       />
 
       {/* Intro */}
@@ -118,10 +118,16 @@ export default function PiercingPage() {
               ))}
             </div>
             <div className="about-image-wrapper reveal-right">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={pexels(32187703, 800)}
-                alt="Piercing jewellery detail"
+              {/* Local lip-piercing clip; the old still stands in as the poster
+                  so the section never opens on a black box. */}
+              <video
+                src="/videos/piercing/lip-piercing/lip-piercing.mp4"
+                poster={pexels(32187703, 800)}
+                autoPlay
+                muted
+                loop
+                playsInline
+                aria-label="Lip piercing close-up"
                 style={{ width: "100%", borderRadius: 4, display: "block" }}
               />
             </div>

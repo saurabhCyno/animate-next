@@ -280,7 +280,7 @@ export const PIERCINGS: Piercing[] = [
     price: 350,
     category: "ear",
     icon: "fa-circle-dot",
-    image: pexels(7400018, 800),
+    image: pexels(7479508, 800),
     imageAlt: "Standard Earlobe Piercing",
     desc: "The classic stud placement in the soft lobe — the easiest entry point to being pierced.",
     detail:
@@ -294,7 +294,7 @@ export const PIERCINGS: Piercing[] = [
     price: 1000,
     category: "ear",
     icon: "fa-bullseye",
-    image: pexels(20858257, 800),
+    image: pexels(4857708, 800),
     imageAlt: "Tragus Piercing",
     desc: "A small, precise piercing in the cartilage flap just in front of the ear canal.",
     detail:
@@ -308,7 +308,7 @@ export const PIERCINGS: Piercing[] = [
     price: 1000,
     category: "ear",
     icon: "fa-compass",
-    image: pexels(3396041, 800),
+    image: pexels(15799256, 800),
     imageAlt: "Conch Piercing",
     desc: "Placed in the deep bowl of the inner ear, framed neatly by the helix.",
     detail:
@@ -322,7 +322,7 @@ export const PIERCINGS: Piercing[] = [
     price: 1000,
     category: "ear",
     icon: "fa-fire",
-    image: pexels(31939281, 800),
+    image: pexels(15743948, 800),
     imageAlt: "Daith Piercing",
     desc: "A curved cartilage piercing at the innermost fold, ideal for a hoop.",
     detail:
@@ -336,7 +336,7 @@ export const PIERCINGS: Piercing[] = [
     price: 800,
     category: "ear",
     icon: "fa-leaf",
-    image: pexels(30579113, 800),
+    image: pexels(7400019, 800),
     imageAlt: "Flat Piercing",
     desc: "A surface piercing set flat against the upper cartilage ridge of the ear.",
     detail:
@@ -350,7 +350,7 @@ export const PIERCINGS: Piercing[] = [
     price: 1800,
     category: "ear",
     icon: "fa-hammer",
-    image: pexels(36587163, 800),
+    image: pexels(28469072, 800),
     imageAlt: "Industrial Piercing",
     desc: "A straight bar through the upper cartilage, linking two piercing points.",
     detail:
@@ -362,13 +362,13 @@ export const PIERCINGS: Piercing[] = [
     slug: "dimple",
     name: "Dimple Piercing",
     price: 1200,
-    category: "ear",
+    category: "face",
     icon: "fa-dot-circle",
-    image: pexels(3309590, 800),
+    image: pexels(14001863, 800),
     imageAlt: "Dimple Piercing",
-    desc: "A small stud placed in the dimple of the inner cartilage, set back from the edge.",
+    desc: "A stud set into the cheek so the jewellery sits right in the natural dimple.",
     detail:
-      "A dimple piercing sits in the natural hollow of the inner ear cartilage, set back from the helix edge. It is subtle, tucks neatly against the ear, and pairs well with other inner-ear work. Because the placement is recessed, it needs careful cleaning to avoid product build-up.",
+      "A dimple piercing passes through the cheek so the jewellery sits exactly where a dimple forms when you smile. The cheek is soft, vascular tissue, so we mark the placement with you in a mirror before we start and keep the jewellery low-profile while it settles. Expect more swelling than a lobe and a slower settle than most facial work.",
     healing: "3-6 months",
     jewelry: "Small titanium or gold studs, 16g to 18g",
   },
@@ -380,7 +380,7 @@ export const PIERCINGS: Piercing[] = [
     price: 600,
     category: "face",
     icon: "fa-location-dot",
-    image: pexels(9164794, 800),
+    image: pexels(7230416, 800),
     imageAlt: "Nose Piercing",
     desc: "A single nostril hoop or stud — our most popular facial placement.",
     detail:
@@ -394,7 +394,7 @@ export const PIERCINGS: Piercing[] = [
     price: 1200,
     category: "face",
     icon: "fa-gem",
-    image: pexels(39842853, 800),
+    image: pexels(13161481, 800),
     imageAlt: "Septum Piercing",
     desc: "A piercing through the nasal septum, worn with a ring, horseshoe or captive bead.",
     detail:
@@ -408,7 +408,7 @@ export const PIERCINGS: Piercing[] = [
     price: 1000,
     category: "face",
     icon: "fa-star",
-    image: pexels(2474502, 800),
+    image: pexels(16744733, 800),
     imageAlt: "Eyebrow Piercing",
     desc: "A stud through the brow tail or arch, a subtle placement with real character.",
     detail:
@@ -422,7 +422,7 @@ export const PIERCINGS: Piercing[] = [
     price: 1000,
     category: "face",
     icon: "fa-comment",
-    image: pexels(37722196, 800),
+    image: pexels(36269316, 800),
     imageAlt: "Labret Piercing",
     desc: "A stud or ring in the lower lip, below the centre line of the mouth.",
     detail:
@@ -436,7 +436,7 @@ export const PIERCINGS: Piercing[] = [
     price: 1200,
     category: "face",
     icon: "fa-smile",
-    image: pexels(31603891, 800),
+    image: pexels(3762442, 800),
     imageAlt: "Smiley Piercing",
     desc: "A piercing in the upper lip that curls upward when you smile.",
     detail:
@@ -450,11 +450,11 @@ export const PIERCINGS: Piercing[] = [
     price: 1500,
     category: "face",
     icon: "fa-link",
-    image: pexels(5871299, 800),
+    image: pexels(5546472, 800),
     imageAlt: "Web Piercing",
-    desc: "A piercing in the soft web between the thumb and index finger.",
+    desc: "A small piercing in the web of skin under the tongue, hidden until you show it.",
     detail:
-      "A web piercing passes through the thin skin between the thumb and index finger. It is a small placement with a lot of visual impact, and the tissue there is delicate with several nerves running close by. We use the smallest practical gauge and give you a clear aftercare routine to protect it.",
+      "A web piercing passes through the frenulum, the thin band of skin that connects the underside of your tongue to the floor of the mouth. It is a quick placement through delicate tissue, and it sits completely hidden while it heals, visible only when you stick your tongue out. We use the smallest practical gauge and give you a clear aftercare routine to protect it.",
     healing: "3-6 months",
     jewelry: "Small titanium or gold balls, 16g to 20g",
   },
@@ -466,7 +466,7 @@ export const PIERCINGS: Piercing[] = [
     price: 1400,
     category: "body",
     icon: "fa-circle",
-    image: pexels(18491011, 800),
+    image: pexels(4224435, 800),
     imageAlt: "Belly Piercing",
     desc: "A navel piercing, worn as a ring, horseshoe or a stud above the belly button.",
     detail:
@@ -480,7 +480,7 @@ export const PIERCINGS: Piercing[] = [
     price: 2500,
     category: "body",
     icon: "fa-syringe",
-    image: pexels(34041395, 800),
+    image: pexels(11560614, 800),
     imageAlt: "Dermal Piercing",
     desc: "An anchor set flat against the skin, commonly on the upper arms or lower back.",
     detail:
@@ -494,7 +494,7 @@ export const PIERCINGS: Piercing[] = [
     price: 1500,
     category: "body",
     icon: "fa-heart",
-    image: pexels(36587165, 800),
+    image: pexels(29400911, 800),
     imageAlt: "Tongue Piercing",
     desc: "A barbell or ring through the centre of the tongue.",
     detail:
@@ -508,7 +508,7 @@ export const PIERCINGS: Piercing[] = [
     price: 3500,
     category: "body",
     icon: "fa-crown",
-    image: pexels(35391766, 800),
+    image: pexels(8669369, 800),
     imageAlt: "Sternum Piercing",
     desc: "A horizontal bar across the hollow of the throat, high on the sternum.",
     detail:

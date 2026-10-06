@@ -3836,3 +3836,16 @@
   /* Nudges the glyph onto the optical centre of the circle. */
   margin-left: 4px;
 }
+
+/* Touch and small screens can't hover, so the card's hover art rests visible:
+   photo behind, 0.7 black wash in front, exactly as `:hover` composes it. */
+@media (hover: none), (max-width: 768px) {
+  .service-card[data-bg]::before,
+  .service-card[data-bg]::after {
+    opacity: 1;
+  }
+
+  .service-card[data-bg]::after {
+    transform: scale(1);
+  }
+}

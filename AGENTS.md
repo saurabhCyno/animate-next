@@ -220,6 +220,45 @@ The user edited these directly — read the files before assuming the old values
   `.about-image-wrapper img, video` share one rule so the clip keeps the original
   600px / 400px cover treatment.
 
+## Session log - 2026-10-06
+
+The six piercing cards on `/services` now use **area-specific close-ups** instead of
+shared `PIERCINGS[].image` values. The override is local to
+`src/app/services/page.tsx`: `PIERCING_CARD_IMAGES` (slug-keyed) is applied as
+`data-bg={PIERCING_CARD_IMAGES[piercing.slug] ?? piercing.image}`.
+
+Why: four of the six shared images were **face portraits**, not shots of the
+placement — verified against Pexels' own alt text, not by eye:
+
+| card | was | now |
+|---|---|---|
+| Standard Earlobe | 7400018 ear, multiple piercings, low light | 7479508 ear + diamond stud |
+| Nose | 9164794 side profile with nose piercing (already right) | 9164794, unchanged |
+| Flat | 30579113 face portrait, red hair | 7400019 ear + emerald stud |
+| Tragus | 20858257 face portrait, bold makeup | 4857708 ear piercings, light backdrop |
+| Conch | 3396041 face portrait, blue hair | 15799256 ear + multiple piercings |
+| Daith | 31939281 face portrait, tattooed | 7667083 ear + silver hoop |
+
+- **Scoped to `/services` only.** `PIERCINGS[].image` is untouched, so the piercing
+  page's grid and detail rows still serve the originals — confirmed by grepping the
+  prerendered HTML of both routes.
+- Images were **never eyeballed** (this model cannot view images). Candidates were
+  chosen from Pexels alt text scraped through `r.jina.ai` on the search pages for
+  "nose/earlobe/tragus/daith/flat/helix/inner ear/cartilage piercing"; all six CDN
+  urls returned `200`. Treat placement-level accuracy for tragus/conch/daith as
+  approximate — Pexels has no photos specific to those three placements.
+- **`npm run lint` now has 1 warning**: `CompareSection` unused in
+  `src/app/our-work/page.tsx`, caused by an uncommitted edit commenting out
+  `<CompareSection />`. Not introduced by this session; `npx tsc --noEmit` and
+  `npm run build` are clean (7 routes prerendered).
+- **New rule, appended to the end of `globals.css`** (not in the source CSS — a
+  deliberate deviation): `@media (hover: none), (max-width: 768px)` sets
+  `.service-card[data-bg]::before/::after` to `opacity: 1` and drops `::after`
+  back to `scale(1)`. Touch can't hover, so the card's hover art (photo + 0.7 black
+  wash) rests visible on mobile. The lift/shadow/border of `:hover` are deliberately
+  not rest-applied. Keep this when diffing breakpoints against `../css/responsive.css`
+  — it is intentional drift, not merge error.
+
 ## Stack
 
 Next.js `16.3.7` (Turbopack default) · React `19.2.8` · TypeScript · App Router with

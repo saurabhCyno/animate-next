@@ -46,7 +46,7 @@ export default function OurWorkPage() {
         }
       />
 
-      <CompareSection />
+      {/* <CompareSection /> */}
 
       <CTASection
         image="https://images.pexels.com/photos/1304469/pexels-photo-1304469.jpeg?auto=compress&cs=tinysrgb&w=1920"

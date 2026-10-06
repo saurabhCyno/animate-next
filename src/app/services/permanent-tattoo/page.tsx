@@ -133,7 +133,7 @@ export default function PermanentTattooPage() {
             Home / <a href="/services">Services</a> / <span>Permanent Tattoo</span>
           </>
         }
-        videoSrc="/videos/hero-bg.mp4"
+        videoSrc="/videos/permanent-tattoos/The Real Gangsta Tattoo.mp4"
         poster={pexels(37023014, 1920)}
       />
 
