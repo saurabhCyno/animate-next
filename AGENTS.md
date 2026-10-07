@@ -88,22 +88,18 @@ jumps **instantly, not smoothly**, because Lenis owns scroll position.
   `/our-work` horizontal-scroll pin.
 - `TATTOO_STYLES` items used `name` but `TextCard` expects `title` (typecheck failure).
 
-### Open issues — not yet fixed
-
-1. `src/lib/services.ts:338` — the daith detail claims "we use a professional piercing
-   gun", which contradicts the hollow-needle-only policy stated elsewhere on the same
-   page (and the FAQ at `:549` asks the question for the wrong answer). Needs a rewrite.
 ### Open issues — status after the 2026-10-05 session
 
-Re-checked on 2026-10-05. Items 1–2 are **still open content bugs**; 3–4 are now dead
-code rather than wrong copy; 5 is unchanged.
+Re-checked on 2026-10-05. Items 1–2 were open content bugs, **fixed on 2026-10-07**;
+3–4 are dead code rather than wrong copy; 5–7 are unchanged.
 
-1. `src/lib/services.ts:329` — the daith detail still claims "we use a professional
-   piercing gun", which contradicts the hollow-needle-only policy stated elsewhere on the
-   same page (and the FAQ at `:540` asks the question for the wrong answer). Needs a
-   rewrite. **Still open.**
-2. `src/app/services/page.tsx:160` says "the five most requested" but line 168 does
-   `.slice(0, 6)` — six render. Either the copy or the slice is wrong. **Still open.**
+1. ~~`src/lib/services.ts` daith "piercing gun" detail~~ — **resolved 2026-10-07.** The
+   detail now says the fold is marked in a mirror and pierced with a sterile,
+   single-use hollow needle. The FAQ at `:540` was already correct ("No. We use a
+   sterile, single-use hollow needle…") — only the detail contradicted policy.
+2. ~~`src/app/services/page.tsx` "five most requested" vs `.slice(0, 6)`~~ — **resolved
+   2026-10-07.** Copy now says "six" (six cards is the intended layout; the sort by
+   price is deliberate).
 3. `src/components/sections/ArtistsGrid.tsx` — **dead code**, nothing imports it. Kept
    deliberately as a faithful port of the source `.artists-grid` markup.
 4. ~~`HorizontalScroll` tattoo-only titles~~ — **resolved by removal.** The strip is
@@ -114,9 +110,50 @@ code rather than wrong copy; 5 is unchanged.
 6. **New:** the testimonial avatar images are still hot-linked Pexels stock photos, so
    three Indian client names are attached to unrelated faces. There is no portrait media
    in `public/images` yet.
-7. **New:** `public/images/piercing/ear-pericing/` is misspelled while
-   `public/videos/piercing/ear-piercing/` is not. Both render as "Ear Piercing" (the
-   label builder tolerates either), so it is cosmetic — but it will show up in URLs.
+7. ~~`public/images/piercing/ear-pericing/` misspelled~~ — **resolved 2026-10-07.**
+   Folder renamed to `ear-piercing/` (nothing hardcoded it; the label builder
+   tolerates either spelling). Verified no `ear-pericing` string in any built HTML.
+
+## Session log - 2026-10-07
+
+Closed every open issue that can be closed without a browser or the user's eyes:
+
+- **Daith detail** (`src/lib/services.ts`) rewritten: the fold is marked in a mirror
+  and pierced with a sterile, single-use hollow needle. The FAQs were already correct
+  — only this one detail contradicted the needle-only policy.
+- **"five most requested" → "six"** in `src/app/services/page.tsx` (six cards render,
+  sorted by price ascending — the count copy was wrong, not the slice).
+- **Stale `next start` servers on 3111/3112 killed** (old build, dead CSS hash).
+- **`public/images/piercing/ear-pericing/` renamed to `ear-piercing/`** (issue 7).
+- **New media picked up by the scan, no code change**: 4 tattoo stills
+  (`angel-with-time`, `modern-lion-art`, `samay-tattoo`, `trishul-tattoo`),
+  `videos/permanent-tattoos/shiv-shakti-tattoo.mp4`, and
+  `videos/piercing/septum-piercing/` (2 clips). A new `public/images/artist/` folder
+  (8 files incl. a stray `.mp4`) exists but is **not scanned** — it is neither
+  `permanent-tattoos/` nor `piercing/`, so it stays out of the portfolio;
+  `/images/artist.jpg` (the referenced portrait) still exists alongside it.
+- Verified: `npx tsc --noEmit` clean, `npm run lint` 0 errors (only the pre-existing
+  `CompareSection` warning), `npm run build` 7 routes + `_not-found` prerendered, and
+  all copy/media changes grepped into `.next/server/app/*.html` with the UTF-8-safe
+  `[System.IO.File]::ReadAllText` method.
+- **Later:** user added `videos/piercing/conch-piercing/conch-piercing.mp4` — scanned
+  automatically as "Conch Piercing" on `/` and `/our-work` (portfolio only; confirmed
+  with the user that it does **not** go in any `/services/piercing` section). Serves
+  `200 video/mp4` off the dev server.
+- **Later: portfolio pagination added.** `PortfolioExplorer` takes an optional
+  `perPage` prop; home passes `6` (3-col grid → 2 rows), `/our-work` passes `9`.
+  The permanent-tattoo page omits it and renders full. Controls render only when a
+  filter holds >1 page (so the Piercing filter's 6 items show no pager), filter
+  changes reset to page 1, and the lightbox still registers/opens against the
+  **full** item list (`items.indexOf` works across slices). After a page/filter
+  change a `ScrollTrigger.refresh()` re-measures pins below the grid, and the
+  section is scrolled back into view only if its top left the viewport (instant
+  jump — Lenis owns scroll). Page-2+ items mount without the GSAP stagger
+  (GsapEffects runs once per route), so they appear static — intentional.
+  New CSS appended at the end of `globals.css` (`.portfolio-pagination` /
+  `.page-btn`, styled to match `.filter-btn`) — keep it when diffing against the
+  source; the source has no pagination. Verified in prerendered HTML: home 6
+  items + 5 buttons, /our-work 9 items + 4 buttons, tattoo page no pager.
 
 ## Session log — 2026-10-05
 
@@ -440,7 +477,7 @@ the authority and the merge has already drifted once (see session log).
 | `src/components/fx/ServiceCardBackgrounds.tsx` | `initServiceCardImages()` |
 | `src/components/fx/HashScroller.tsx` | **new** — client-nav hash scrolling for `#slug` deep links |
 | `src/components/fx/GsapEffects.tsx` | `initGSAPAnimations()` (js/animations.js) |
-| `src/components/sections/PortfolioExplorer.tsx` | `PortfolioFilter` + `Lightbox`, `variant="home" \| "page"`, `filterLabels`; renders `<video>` tiles when `item.type === "video"` |
+| `src/components/sections/PortfolioExplorer.tsx` | `PortfolioFilter` + `Lightbox`, `variant="home" \| "page"`, `filterLabels`; renders `<video>` tiles when `item.type === "video"`; optional `perPage` paginates the grid (home 6, /our-work 9) |
 | `src/components/chrome/LightboxProvider.tsx` | `Lightbox` class — **extended 2026-10-05** to play clips; sniffs the extension, renders only while open |
 | `src/components/sections/FeaturedArtist.tsx` | **new** — replaces `.artists-grid` on home + About; `reverse` / `compact`; **one block per page since 2026-10-05** |
 | `src/components/sections/PiercingGrid.tsx` | **new** — `.piercing-grid` cards |
@@ -524,16 +561,15 @@ unconfirmed. This is the main outstanding item — see "Next steps".
    (`npx serve ..`) and this app side by side, capture home / about / our-work /
    services at desktop and mobile widths, and diff. This now includes the video tiles,
    the play badge and the lightbox clip.
-2. Fix the two remaining **content** bugs in the session log — the daith "piercing gun"
-   copy and the "five most requested" count. Everything else there is dead-code cleanup.
+2. ~~Fix the two remaining **content** bugs~~ — **done 2026-10-07** (daith copy + "six
+   most requested"); verified in the prerendered HTML.
 3. Confirm the loader, custom cursor, and scroll effects — these are client-only and
    cannot be checked in static HTML.
 4. Check GSAP scroll-triggered animations actually fire at the right scroll positions,
    especially the `/our-work` pin after the image-load refresh.
-5. **2026-10-06 follow-ups**: swap daith (15743948) if the user's eye review rejects
-   it — alternates 11390512 / 13574852 / 7400018, same workflow as the other 16;
-   kill the stale `next start` servers on 3111/3112 (old build, dead CSS hash) so
-   the user stops seeing outdated images.
+5. **2026-10-06 follow-up**: swap daith (15743948) if the user's eye review rejects
+   it — alternates 11390512 / 13574852 / 7400018, same workflow as the other 16.
+   (The stale `next start` servers on 3111/3112 were killed on 2026-10-07.)
 
 ## Known deliberate deviation
 

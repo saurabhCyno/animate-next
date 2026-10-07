@@ -2,7 +2,7 @@ import Button from "@/components/ui/Button";
 import StatsGrid from "./StatsGrid";
 
 const ABOUT_PARAGRAPHS = [
-  "Founded in 2025, Inkspiration has grown from a passion project into one of the most acclaimed tattoo studios in the world. Our team of award-winning artists brings together diverse expertise in realism, blackwork, Japanese, and fine line styles.",
+  "Founded in 2021, Inkspiration has grown from a passion project into one of the most acclaimed tattoo studios in the world. Our team of award-winning artists brings together diverse expertise in realism, blackwork, Japanese, and fine line styles.",
   "Every tattoo we create is a collaborative journey — from the initial consultation to the final reveal. We believe that the best tattoos are born from trust, creativity, and an uncompromising commitment to excellence.",
 ];
 

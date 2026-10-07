@@ -326,7 +326,7 @@ export const PIERCINGS: Piercing[] = [
     imageAlt: "Daith Piercing",
     desc: "A curved cartilage piercing at the innermost fold, ideal for a hoop.",
     detail:
-      "The daith sits in the deep fold where the upper cartilage meets the ear, and is almost always worn with a circular hoop. It is a demanding placement to pierce by hand, so we use a professional piercing gun to get an even, clean tunnel. Expect a long, slow heal.",
+      "The daith sits in the deep fold where the upper cartilage meets the ear, and is almost always worn with a circular hoop. It is a demanding placement because of the angle of the fold, so we mark it with you in a mirror first and pierce it with a sterile, single-use hollow needle. Expect a long, slow heal.",
     healing: "6-12 months",
     jewelry: "Capture or fixed hoops in titanium, niobium or gold",
   },

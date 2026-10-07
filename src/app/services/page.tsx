@@ -157,7 +157,7 @@ export default function ServicesPage() {
               {PIERCINGS.length} Placements, <span className="gradient-text">All Priced</span>
             </h2>
             <p className="section-subtitle" style={{ margin: "0 auto" }}>
-              Jewellery included with every piercing. Here are the five most requested — the full
+              Jewellery included with every piercing. Here are the six most requested — the full
               menu is on the piercing page.
             </p>
           </div>

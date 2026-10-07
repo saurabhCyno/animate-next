@@ -21,7 +21,7 @@ const FEATURED_ARTIST: FeaturedArtistData = {
   name: "Karan Bakshi",
   role: "Founder",
   specialty: "Founder & Master Artist — Inkspiration",
-  image: '/images/artist.jpg',
+  image: '/images/artist/artist-on-duty.jpeg',
   imageAlt: "Karan Bakshi, founder and lead artist",
   bio: [
     "With years of experience behind the machine, Karan Bakshi has built Inkspiration around one belief: great tattooing is where artistry, precision, and individuality come together.",
@@ -77,6 +77,7 @@ export default function HomePage() {
         filters={HOME_FILTERS}
         filterLabels={HOME_FILTER_LABELS}
         variant="home"
+        perPage={6}
         label="Our Portfolio"
         title={
           <>

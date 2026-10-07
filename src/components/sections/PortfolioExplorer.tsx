@@ -1,6 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode, type CSSProperties } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+  type CSSProperties,
+} from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLightbox } from "@/components/chrome/LightboxProvider";
 
 /** Portfolio media is stills or clips; the lightbox picks a viewer off the same field. */
@@ -35,6 +44,12 @@ type Props = {
   overlay?: boolean;
   sectionClassName?: string;
   headerStyle?: CSSProperties;
+  /**
+   * Paginate the grid: one page holds this many items of the current filter.
+   * Omit for galleries that render in full (permanent-tattoo page). Controls
+   * only appear once a filter holds more than one page.
+   */
+  perPage?: number;
 };
 
 /**
@@ -54,8 +69,12 @@ export default function PortfolioExplorer({
   overlay = true,
   sectionClassName,
   headerStyle,
+  perPage,
 }: Props) {
   const [filter, setFilter] = useState("all");
+  const [page, setPage] = useState(1);
+  const sectionRef = useRef<HTMLElement>(null);
+  const settled = useRef(false);
   const { register, open } = useLightbox();
 
   useEffect(() => {
@@ -66,6 +85,30 @@ export default function PortfolioExplorer({
     () => (filter === "all" ? items : items.filter((i) => i.category === filter)),
     [filter, items],
   );
+
+  const pageCount = perPage ? Math.max(1, Math.ceil(visible.length / perPage)) : 1;
+  const currentPage = Math.min(Math.max(page, 1), pageCount);
+  const pageItems =
+    pageCount > 1 && perPage
+      ? visible.slice((currentPage - 1) * perPage, currentPage * perPage)
+      : visible;
+
+  // Swapping pages resizes the document, so pins and scrubs below the grid are
+  // re-measured; and a shorter page can drop the section header off-screen, in
+  // which case jump back to it (instant — Lenis owns the scroll position).
+  // Skipped on mount, where GsapEffects has not necessarily run yet.
+  useEffect(() => {
+    if (!settled.current) {
+      settled.current = true;
+      return;
+    }
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.refresh();
+    const section = sectionRef.current;
+    if (section && section.getBoundingClientRect().top < 0) {
+      section.scrollIntoView({ block: "start" });
+    }
+  }, [filter, currentPage]);
 
   const gridClass = variant === "home" ? "portfolio-grid" : "portfolio-page-grid";
   const itemClass = variant === "home" ? "portfolio-item" : "portfolio-page-item";
@@ -82,7 +125,7 @@ export default function PortfolioExplorer({
   );
 
   return (
-    <section className={sectionClasses}>
+    <section className={sectionClasses} ref={sectionRef}>
       <div className="container">
         {filters ? (
           <div className="portfolio-header reveal">
@@ -96,7 +139,10 @@ export default function PortfolioExplorer({
                   className={`filter-btn${filter === f ? " active" : ""}`}
                   data-filter={f}
                   key={f}
-                  onClick={() => setFilter(f)}
+                  onClick={() => {
+                    setFilter(f);
+                    setPage(1);
+                  }}
                 >
                   {f === "all" ? "All" : filterLabels?.[f] ?? f}
                 </button>
@@ -110,10 +156,10 @@ export default function PortfolioExplorer({
         )}
 
         <div className={gridClass}>
-          {visible.length === 0 ? (
+          {pageItems.length === 0 ? (
             <p className="portfolio-empty">No work in this category yet.</p>
           ) : null}
-          {visible.map((item) => {
+          {pageItems.map((item) => {
             const index = items.indexOf(item);
             return (
               <div
@@ -156,6 +202,40 @@ export default function PortfolioExplorer({
             );
           })}
         </div>
+
+        {pageCount > 1 ? (
+          <nav className="portfolio-pagination" aria-label="Gallery pages">
+            <button
+              type="button"
+              className="page-btn"
+              disabled={currentPage === 1}
+              onClick={() => setPage(currentPage - 1)}
+              aria-label="Previous page"
+            >
+              <i className="fas fa-chevron-left" aria-hidden="true" />
+            </button>
+            {Array.from({ length: pageCount }, (_, i) => i + 1).map((n) => (
+              <button
+                type="button"
+                className={`page-btn${n === currentPage ? " active" : ""}`}
+                key={n}
+                onClick={() => setPage(n)}
+                aria-current={n === currentPage ? "page" : undefined}
+              >
+                {n}
+              </button>
+            ))}
+            <button
+              type="button"
+              className="page-btn"
+              disabled={currentPage === pageCount}
+              onClick={() => setPage(currentPage + 1)}
+              aria-label="Next page"
+            >
+              <i className="fas fa-chevron-right" aria-hidden="true" />
+            </button>
+          </nav>
+        ) : null}
       </div>
     </section>
   );

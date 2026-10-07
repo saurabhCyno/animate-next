@@ -38,6 +38,7 @@ export default function OurWorkPage() {
         filters={FILTERS}
         filterLabels={FILTER_LABELS}
         variant="page"
+        perPage={9}
         label="Gallery"
         title={
           <>
