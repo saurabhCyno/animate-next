@@ -6,7 +6,7 @@ export type FeaturedArtistData = {
   imageAlt: string;
   bio: string[];
   stats: { value: string; label: string }[];
-  socials: [string, string][];
+  socials: (string | string[])[];
 };
 
 /**
@@ -64,13 +64,20 @@ export default function FeaturedArtist({
         </div>
 
         <div className="artist-feature-actions">
-          <div className="artist-social artist-social--static">
-            {artist.socials.map(([icon, label]) => (
-              <a href="#" aria-label={label} key={label}>
+        <div className="artist-social artist-social--static">
+          {artist.socials.map((social) => {
+            const [icon, label, href] = Array.isArray(social)
+              ? social.length === 3
+                ? (social as [string, string, string])
+                : (social as [string, string])
+              : ([social, social]);
+            return (
+              <a href={href || "#"} aria-label={label} key={label} target={href ? "_blank" : undefined} rel={href ? "noopener noreferrer" : undefined}>
                 <i className={`fab ${icon}`} />
               </a>
-            ))}
-          </div>
+            );
+          })}
+        </div>
         </div>
       </div>
     </div>

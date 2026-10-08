@@ -5,11 +5,14 @@ import FooterTagline from "./FooterTagline";
 export function SocialLinks() {
   return (
     <div className="footer-social">
-      {SOCIAL_LINKS.map((social) => (
-        <a key={social.label} href="#" aria-label={social.label}>
-          <i className={social.icon} />
-        </a>
-      ))}
+      {SOCIAL_LINKS.map((social) => {
+        const href = 'href' in social ? (social as any).href : undefined;
+        return (
+          <a key={social.label} href={href || "#"} aria-label={social.label} target={href ? "_blank" : undefined} rel={href ? "noopener noreferrer" : undefined}>
+            <i className={social.icon} />
+          </a>
+        );
+      })}
     </div>
   );
 }

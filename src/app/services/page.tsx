@@ -71,7 +71,7 @@ export default function ServicesPage() {
             Home / <span>Services</span>
           </>
         }
-        image={pexels(20519299, 1920)}
+        image="/images/permanent-tattoos/shiv-krishna.jpeg"
         imageAlt="Tattoo services"
       />
 
@@ -219,7 +219,7 @@ export default function ServicesPage() {
           </>
         }
         desc="Book a consultation with our team and let's create something extraordinary together. Consultations are free and you are under no obligation."
-        ctaHref="tel:9876543210"
+        ctaHref="tel:9045538809"
         ctaLabel="Call Now"
       />
     </>

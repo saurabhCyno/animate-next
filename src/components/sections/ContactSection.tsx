@@ -4,21 +4,25 @@ import { useRef, useState } from "react";
 import { SOCIAL_LINKS } from "@/lib/site";
 
 const STYLES = [
-  ["custom", "Custom Tattoo"],
-  ["realism", "Realism"],
-  ["black-grey", "Black & Grey"],
-  ["traditional", "Traditional"],
-  ["japanese", "Japanese"],
-  ["fine-line", "Fine Line"],
-  ["cover-up", "Cover-Up"],
-  ["piercing", "Piercing"],
-] as const;
-
-const BUDGETS = [
-  ["200-500", "$200 - $500"],
-  ["500-1000", "$500 - $1,000"],
-  ["1000-2000", "$1,000 - $2,000"],
-  ["2000+", "$2,000+"],
+  ["permanent-tattoo", "Permanent Tattoo"],
+  ["cover-ups", "Cover-Ups"],
+  ["standard-earlobe-piercing", "Standard Earlobe Piercing"],
+  ["tragus-piercing", "Tragus Piercing"],
+  ["conch-piercing", "Conch Piercing"],
+  ["daith-piercing", "Daith Piercing"],
+  ["flat-piercing", "Flat Piercing"],
+  ["industrial-piercing", "Industrial Piercing"],
+  ["dimple-piercing", "Dimple Piercing"],
+  ["nose-piercing", "Nose Piercing"],
+  ["septum-piercing", "Septum Piercing"],
+  ["eyebrow-piercing", "Eyebrow Piercing"],
+  ["labret-piercing", "Labret Piercing"],
+  ["smiley-piercing", "Smiley Piercing"],
+  ["web-piercing", "Web Piercing"],
+  ["belly-piercing", "Belly Piercing"],
+  ["dermal-piercing", "Dermal Piercing"],
+  ["tongue-piercing", "Tongue Piercing"],
+  ["sternum-piercing", "Sternum Piercing"],
 ] as const;
 
 const INFO_CARDS = [
@@ -27,9 +31,7 @@ const INFO_CARDS = [
     title: "Studio Address",
     body: (
       <>
-        47 Artisan Lane, Suite 200
-        <br />
-        Los Angeles, CA 90012
+        Inkspiration Studio & KN Fitness, Opp. Mandir & Gurudwara Ground, Premnagar, Dehradun
       </>
     ),
   },
@@ -49,7 +51,7 @@ const INFO_CARDS = [
     title: "Email",
     body: (
       <>
-        hello@inkandneedle.com
+        karanbakshi2208@gmail.com
         <br />
         We reply within 24 hours
       </>
@@ -68,7 +70,7 @@ const INFO_CARDS = [
   },
 ] as const;
 
-const MAP_QUERY = "https://www.google.com/maps?q=Premnagar+Dehradun+Uttarakhand+India";
+const MAP_QUERY = "https://www.google.com/maps?q=30.333831,77.961242";
 const MAP_EMBED = `${MAP_QUERY}&output=embed`;
 
 /** Port of the contact section on contact.html plus the `ContactForm` class. */
@@ -149,18 +151,11 @@ export default function ContactSection() {
                       </option>
                     ))}
                   </select>
-                  <label htmlFor="style">Tattoo Style</label>
+                  <label htmlFor="style">Style</label>
                 </div>
                 <div className="form-group">
-                  <select id="budget" name="budget" required defaultValue="">
-                    <option value="" disabled />
-                    {BUDGETS.map(([value, label]) => (
-                      <option value={value} key={value}>
-                        {label}
-                      </option>
-                    ))}
-                  </select>
-                  <label htmlFor="budget">Budget Range</label>
+                  <input type="number" id="budget" name="budget" placeholder=" " required min="0" />
+                  <label htmlFor="budget">Budget (₹)</label>
                 </div>
               </div>
               <div className="form-group">
@@ -201,11 +196,14 @@ export default function ContactSection() {
               <div className="contact-info-content">
                 <h4>Follow Us</h4>
                 <div className="footer-social" style={{ marginTop: 8 }}>
-                  {SOCIAL_LINKS.map((social) => (
-                    <a href="#" aria-label={social.label} key={social.label}>
-                      <i className={social.icon} />
-                    </a>
-                  ))}
+                  {SOCIAL_LINKS.map((social) => {
+                    const href = 'href' in social ? (social as any).href : undefined;
+                    return (
+                      <a href={href || "#"} aria-label={social.label} key={social.label} target={href ? "_blank" : undefined} rel={href ? "noopener noreferrer" : undefined}>
+                        <i className={social.icon} />
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             </div>

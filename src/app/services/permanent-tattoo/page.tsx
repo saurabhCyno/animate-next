@@ -336,7 +336,7 @@ export default function PermanentTattooPage() {
           </>
         }
         desc={`Bespoke artwork at ${TATTOO_PRICING.rateLabel} per inch. Book a consultation with our artists and let's create something extraordinary together.`}
-        ctaHref="tel:9876543210"
+        ctaHref="tel:9045538809"
         ctaLabel="Call Now"
       />
     </>

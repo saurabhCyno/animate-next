@@ -34,7 +34,7 @@ const FEATURED_ARTIST: FeaturedArtistData = {
     { value: "5+", label: "Industry Recognitions" },
   ],
   socials: [
-    ["fa-instagram", "Instagram"],
+    ["fa-instagram", "Instagram", "https://www.instagram.com/inkspiration_by_bakshi"],
     ["fa-twitter", "Twitter"],
     ["fa-pinterest", "Pinterest"],
   ],
@@ -105,7 +105,7 @@ export default function HomePage() {
       <TestimonialsSwiper items={TESTIMONIALS} />
 
       <CTASection
-        image={pexels(35172671, 1920)}
+        image='/images/artist/tattoo-artist.jpeg'
         imageAlt="Tattoo Equipment"
         title={
           <>
@@ -113,7 +113,7 @@ export default function HomePage() {
           </>
         }
         desc="Your vision deserves the highest level of artistry. Book a consultation with our award-winning team and let's create something extraordinary together."
-        ctaHref="tel:9876543210"
+        ctaHref="tel:9045538809"
         ctaLabel="Call Now"
       />
     </>

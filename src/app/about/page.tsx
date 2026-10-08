@@ -46,7 +46,7 @@ const ARTISTS: FeaturedArtistData[] = [
     name: "Karan Bakshi",
     role: "Founder",
     specialty: "Founder & Master Artist — Inkspiration",
-    image: "/images/artist.jpg",
+    image: "/images/artist/artist-work.jpeg",
     imageAlt: "Karan Bakshi, founder and master artist",
     bio: [
       "Karan Bakshi built Inkspiration around a single belief: great tattooing is where artistry, precision and individuality come together. As founder and master artist, he approaches every tattoo as a custom piece of art, weighing composition, flow and the way a design sits on the body.",
@@ -58,7 +58,7 @@ const ARTISTS: FeaturedArtistData[] = [
       { value: "5+", label: "Industry Recognitions" },
     ],
     socials: [
-      ["fa-instagram", "Instagram"],
+      ["fa-instagram", "Instagram", "https://www.instagram.com/inkspiration_by_bakshi"],
       ["fa-twitter", "Twitter"],
       ["fa-pinterest", "Pinterest"],
     ],
@@ -93,8 +93,7 @@ export default function AboutPage() {
             Home / <span>About Us</span>
           </>
         }
-        image="https://images.pexels.com/photos/35702114/pexels-photo-35702114.jpeg?auto=compress&cs=tinysrgb&w=1920"
-        imageAlt="About Inkspiration"
+        image="/images/artist/art-tattoo-artist.jpeg"
       />
 
       <section className="section">
@@ -196,7 +195,7 @@ export default function AboutPage() {
       </section>
 
       <CTASection
-        image="https://images.pexels.com/photos/6593483/pexels-photo-6593483.jpeg?auto=compress&cs=tinysrgb&w=1920"
+        image="/images/artist/artist-art.jpeg"
         imageAlt="Tattoo Art"
         title={
           <>
@@ -204,7 +203,7 @@ export default function AboutPage() {
           </>
         }
         desc="With over a decade of experience and thousands of satisfied clients, your safety and satisfaction are guaranteed. Book a consultation and experience the difference."
-        ctaHref="tel:9876543210"
+        ctaHref="tel:9045538809"
         ctaLabel="Call Now"
       />
     </>

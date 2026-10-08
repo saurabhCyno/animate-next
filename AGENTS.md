@@ -412,9 +412,10 @@ Pinned deps (exact, no carets): `gsap@3.12.5`, `lenis@1.1.20`, `swiper@11.2.10`,
 | `../contact.html` | `/contact` |
 | `../services/custom-tattoos.html` | `/services/permanent-tattoo` (renamed) |
 | — new | `/services/piercing` |
+| — new | `/home-new` (redesigned home — **video hero only**, 2026-10-07) |
 
 `/services/custom-tattoos` and `/services/permanent-tattoos` both 308-redirect to
-`/services/permanent-tattoo`. Seven routes prerender static.
+`/services/permanent-tattoo`. Eight routes prerender static.
 
 ## Source of truth for content
 
@@ -490,6 +491,7 @@ the authority and the merge has already drifted once (see session log).
 | `src/components/sections/StudioGallery.tsx` | `.studio-gallery` markup — **client since 2026-10-06**, registers with the lightbox and opens on click |
 | `src/components/sections/ArtistsGrid.tsx` | **dead** — superseded by `FeaturedArtist`, kept as a faithful port |
 | `src/components/sections/HorizontalScroll.tsx` | **dead** — the `/our-work` call site was removed on 2026-10-05 |
+| `src/app/home-new/VideoHero.tsx` | **new (2026-10-07)** — scroll-scrubbed hero video for `/home-new`; all other `/home-new` code lives in `page.tsx` + scoped `home-new.css` |
 
 ## Next 16 gotchas already hit
 
@@ -518,6 +520,14 @@ the authority and the merge has already drifted once (see session log).
   comes back mojibake and greps return **false negatives** — a string that is really in
   the page reports `False`. This made a verification pass look like a failure. Use:
   `$h = [System.IO.File]::ReadAllText("$PWD\.next\server\app\index.html"); $h.Contains("Rohan Mehta")`.
+- **`body { overflow-x: hidden }` breaks `position: sticky`.** Only the root element's
+  overflow propagates to the viewport; body's own hidden `overflow-x` forces
+  `overflow-y` to `auto`, making body a scroll container that never scrolls, so sticky
+  descendants never engage. `html { overflow-x: hidden }` is safe (it propagates).
+  `body`'s rule was removed from `globals.css` on 2026-10-07 (see the `/home-new`
+  session log) — do not re-add it from the source CSS. Headless-Chrome CDP probe
+  (`sticky-probe.mjs`, temp dir) is the way to verify sticky/pin behaviour without a
+  browser.
 
 ## Verification status
 
@@ -526,8 +536,8 @@ Passing:
 ```
 npx tsc --noEmit     # clean
 npm run lint         # 1 warning only: CompareSection unused in our-work/page.tsx (user's own edit)
-npm run build        # 7 routes prerendered static
-next start + fetch   # 200 on all 7 routes, both 308 redirects land
+npm run build        # 8 routes prerendered static (incl. /home-new)
+next start + fetch   # 200 on all 8 routes, both 308 redirects land
 ```
 
 Prerendered HTML was diffed against the source markup for all six *original* routes —
@@ -555,6 +565,17 @@ original has been run, and none of the 2026-09-30 redesigns have been looked at 
 browser. Font rendering, image loading, GSAP timing, and responsive breakpoints are
 unconfirmed. This is the main outstanding item — see "Next steps".
 
+The 2026-10-07 `/home-new` video hero was verified **headlessly, not visually**: two
+temp-dir CDP probes (`sticky-probe.mjs`, `jerk-probe.mjs` — Node 24 WebSocket against
+headless Chrome) confirmed at desktop (1440×900) and mobile (~757px) widths that the
+stage pins for the whole scrub, `currentTime` tracks the scroll (0 → 4.98 → 9.98 of
+10.0s) and finishes exactly when the sticky releases with the footer pushing in;
+after the dense-GOP re-encode + seek guard, a simulated 4s scroll issued 100 seeks
+and all 100 completed (median 31ms; before: 253 issued / 1 completed / 251ms freeze
+then leap). `tsc`/lint/build green (8 routes), scrub mp4 serves `200 video/mp4`.
+What these probes **cannot** vouch for: the subjective smoothness of the scrub and
+the mobile layout on a real device — only the user's scroll can.
+
 ## Next steps
 
 1. **Visual check of the redesigned sections** (the gap). Serve the original
@@ -570,9 +591,98 @@ unconfirmed. This is the main outstanding item — see "Next steps".
 5. **2026-10-06 follow-up**: swap daith (15743948) if the user's eye review rejects
    it — alternates 11390512 / 13574852 / 7400018, same workflow as the other 16.
    (The stale `next start` servers on 3111/3112 were killed on 2026-10-07.)
+6. **`/home-new` open items** (2026-10-07): (a) the user must confirm the scrub feel
+   in a real browser — desktop and an actual phone — after the jerk fix; the probes
+   prove correctness, not smoothness; (b) the remaining home sections below the hero,
+   when the user specifies them.
 
 ## Known deliberate deviation
 
 The loader replays on **every** client-side navigation (`<LoaderRun key={pathname} />`).
 This matches the static site, where every nav was a full document load. If first-load-only
 is preferred, drop the `key`.
+
+## Session log - 2026-10-07 (later): /home-new — video hero
+
+An earlier full-page scrollytelling `/home-new` was built and then **deleted at the
+user's request** (all `*-new` components, `src/app/home-new/`, and this file's entries
+for it). Rebuilt from scratch as a single section, per the user's spec:
+
+- **Files** (only these three): `src/app/home-new/page.tsx` (server — imports the
+  scoped CSS, metadata `title: "Home New"`), `src/app/home-new/VideoHero.tsx`
+  (client), `src/app/home-new/home-new.css` (every rule scoped `.video-hero`).
+- **Video**: `public/videos/hero-banner/home-landing-first-scrub.mp4` (3.95 MB — a
+  **dense-GOP re-encode** of the user's `home-landing-first.mp4`, which stays on disk
+  untouched; see the jerk fix below), rendered 100% × 100% with `object-fit: cover`,
+  faded in (1.2s) on `loadeddata`. The `hero-banner/` folder is **not** a portfolio
+  category — `gallery.ts` reads only `permanent-tattoos/` and `piercing/`, so the scan
+  ignores it entirely (verified in the source, same rule as files at the `videos/` root).
+- **Scroll-scrub**: section is `400vh` (300vh of scrub range for the 10s clip —
+  tuned from the original `300vh` when the user asked for slower pacing) with a
+  `position: sticky` stage. Progress =
+  `-section.getBoundingClientRect().top /
+  (section.offsetHeight - stage.offsetHeight - parseFloat(getComputedStyle(stage).top))`
+  — stage height and `top` inset included so the timeline finishes exactly when the
+  sticky releases (the `top` term is nonzero on mobile, where the stage is centered).
+  A rAF loop eases the playhead with **frame-rate-independent damping**
+  (`time += (target - time) * (1 - Math.exp(-5 * dt))`, dt clamped to 100ms) and
+  writes `currentTime` only when **`!video.seeking`** and the playhead moved ≥ **1/24 s**
+  (one frame of the 24fps source). Smoothness chain:
+  wheel → Lenis (global `SmoothScroll`) → scrollY → damped lerp → seek. The video
+  is never `play()`ed — scrubbing only.
+- **Header/footer**: come from `layout.tsx` unchanged. Class names avoid every
+  global FX hook (`.hero*`, `.reveal`, `data-*`), so `GsapEffects`/`ScrollReveal`
+  ignore this page. `html { overflow-x: hidden }` propagates to the viewport (root
+  overflow does not break `position: sticky`).
+- **Bug found by probe: `body { overflow-x: hidden }` broke the pin.** Only `html`'s
+  overflow propagates to the viewport; `body`'s own `overflow-x: hidden` (both in the
+  source CSS and in `globals.css`) computed to `overflow-y: auto`, making body a
+  scroll container that never scrolls — so `.video-hero-sticky` scrolled straight off
+  instead of pinning. **Fix: removed `overflow-x: hidden` from `body` in
+  `globals.css`** (deliberate deviation from `../css/style.css`, commented in place;
+  `html`'s rule still clips horizontal overflow at the viewport, so site-wide
+  clipping is unchanged). Verified headless — see below.
+- **Sticky verified with a headless-Chrome CDP probe** (Node 24 native WebSocket +
+  `Runtime.evaluate`, script in the temp dir `sticky-probe.mjs`): before the fix the
+  stage top tracked `-scrollY` (unpinned); after, `stageTop: 0` at scroll 0 / 50% /
+  end-of-range with `currentTime` 0 → 4.99s → 9.99s of the 10.0s clip, then past the
+  range `stageTop: -243` with the footer entering at `242` — pinned for the whole
+  scrub, released exactly when the timeline finishes, next section pushes in.
+  Reuse this probe for any future sticky/pin work; `npm run build` + `tsc` + lint
+  all green after the CSS change (8 routes).
+- Verified: `npx tsc --noEmit` clean · lint only pre-existing warning ·
+  `npm run build` 8 routes · `next start` on :3110 → `200` on `/home-new`, prerendered
+  HTML contains the video src + sticky markup, mp4 returns `200 video/mp4`.
+  **Scrub feel not yet reviewed in a browser.**
+- **Jerk fix (second round, same day).** User: video "jerks", "too fast going",
+  can't see it play smoothly. A second probe (`jerk-probe.mjs`, temp dir) simulated a
+  4s scroll: **253 `seeking` events fired but only 1 `seeked` completed** — every
+  per-frame `currentTime` write cancelled the in-flight seek, so the frame on screen
+  stayed frozen and then **leapt 0 → 8.49s** (one 251ms seek) when scrolling stopped.
+  That frozen-then-leap *is* the jerk and the perceived "too fast". Root cause: the
+  source encode has only **5 I-frames in 10s** (long GOP → seeks decode seconds of
+  frames). Fixes:
+  1. **Re-encode** to `home-landing-first-scrub.mp4` with `libx264 -g 6 -keyint_min 6
+     -sc_threshold 0 -crf 21 -c:a copy` (40 I-frames now; same 3.95 MB). ffmpeg came
+     from npm `@ffmpeg-installer/ffmpeg` installed **in the temp dir** (not the
+     project — `ffmpeg-static`'s GitHub download got ECONNRESET, the npm-hosted
+     binary worked; ffmpeg 4.1-era build).
+  2. **`!video.seeking` guard** + threshold raised to 1/24 (one source frame) so a
+     write never cancels a pending seek and no seek lands on a frame already shown.
+  3. Range math now subtracts the stage's `top` inset (needed for the mobile layout).
+  Post-fix probe: **100 seeking → 100 seeked**, median latency 31ms (was 251ms),
+  ~25 seeks/s advancing ~1.7 video frames each — continuous stepping, no freeze.
+- **Mobile (≤768px) layout** — user: "reduce the height so text should be visible
+  completely". The stage becomes a **16:9 box** (`height: auto; aspect-ratio: 16/9`,
+  exactly the source's 1280×720, so cover crops nothing and embedded text is fully
+  visible), centered via `top: max(0px, calc((100svh - 56.25vw) / 2))` (svh clears
+  the URL bar), and the section shrinks `400vh → 320vh` (less thumb-scrolling).
+  Note: sticky `top` percentages resolve against the containing block, not the
+  viewport — that's why the centering uses `vh`-based `calc()`, not `top: 50%`.
+- Re-verified headless after round two: **desktop 1440×900** — pinned `stageTop: 0`
+  at 0 / 1208 / 2414 of a 2415 range, `currentTime` 0 → 4.98 → 9.98, released at
+  `stageTop: -403` with footer at `402` (stage bottom == footer top); **mobile
+  ~757px** — pinned `stageTop: 28` (the centered inset), stage 426px tall (16:9),
+  released with footer at `242`. `tsc`/lint/build green (8 routes), scrub mp4
+  serves `200 video/mp4`.
+- Next: the remaining home sections, when the user specifies them.

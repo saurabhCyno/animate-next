@@ -161,7 +161,11 @@
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
-    overflow-x: hidden;
+    /* overflow-x: hidden deliberately REMOVED from body vs. ../css/style.css:
+       body's own overflow-x (only html's propagates to the viewport) makes
+       body a scroll container, which breaks `position: sticky` for
+       `.video-hero-sticky` on /home-new. html's rule above still clips
+       horizontal overflow at the viewport — see AGENTS.md 2026-10-07. */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

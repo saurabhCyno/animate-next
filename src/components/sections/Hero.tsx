@@ -37,7 +37,7 @@ export default function Hero() {
             crafting timeless masterpieces since 2025.
           </p>
           <div className="hero-actions">
-            <Button href="tel:9876543210">Call Now</Button>
+            <Button href="tel:9045538809">Call Now</Button>
             <Button href="/our-work" variant="secondary">
               Explore Our Work
             </Button>
