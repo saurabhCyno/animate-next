@@ -686,3 +686,16 @@ for it). Rebuilt from scratch as a single section, per the user's spec:
   released with footer at `242`. `tsc`/lint/build green (8 routes), scrub mp4
   serves `200 video/mp4`.
 - Next: the remaining home sections, when the user specifies them.
+
+
+## Session log - 2026-10-08
+
+- **Contact info updated**: phone 9045538809 (tel/WhatsApp +91), email karanbakshi2208@gmail.com, WhatsApp https://wa.me/919045538809, Instagram https://www.instagram.com/inkspiration_by_bakshi. Updated across site.ts, ContactSection, pages, footer, and static HTML files.
+- **Address updated**: 'Inkspiration Studio & KN Fitness, Opp. Mandir & Gurudwara Ground, Premnagar, Dehradun' in site.ts and ContactSection and static HTML.
+- **ContactSection form updates**: Styles list expanded to all 19 specific services (Permanent Tattoo, Cover-Ups + 17 piercings). Budget field changed from dropdown to number input (?).
+- **Social links**: Footer and ContactSection now properly link Instagram with target=_blank. FeaturedArtist socials type updated to accept optional href.
+- **Cleanup**: Reverted and removed /home-new files and video as requested. Cleared .next.
+- **Verification**: 
+px tsc --noEmit clean, 
+pm run build 7 routes prerendered static.
+

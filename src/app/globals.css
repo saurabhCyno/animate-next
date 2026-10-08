@@ -703,7 +703,7 @@
   }
 
   .hero-title {
-    font-size: clamp(4rem, 10vw, 9rem);
+    font-size: clamp(4rem, 7vw, 9rem);
     line-height: 1;
     margin-bottom: 16px;
     font-weight: 900;
